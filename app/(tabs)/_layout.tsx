@@ -3,32 +3,70 @@ import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+
+import homeIcon from '../../assets/images/bar-icons/tabhome-inactive.png';
+import homeIconFocused from '../../assets/images/bar-icons/tabhome-active.png';
+import matchingIcon from '../../assets/images/bar-icons/tabmatching-inactive.png';
+import matchingIconFocused from '../../assets/images/bar-icons/tabmatching-active.png';
+import profileIcon from '../../assets/images/bar-icons/tabprofile-inactive.png';
+import profileIconFocused from '../../assets/images/bar-icons/tabprofile-active.png';
+
+
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+          headerShown: false,
+          tabBarStyle: {
+            borderTopWidth: 0, // 탭 바 위쪽 테두리 제거
+            height: '12%', // 탭 바 높이 조정
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: Colors.black,
+          },
+          tabBarItemStyle: {
+            justifyContent: 'center',
+            alignContent: 'space-around',
+            margin: 10,
+          }
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '홈',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            <TabBarIcon
+              focused={focused}
+              image={focused ? homeIconFocused : homeIcon}
+            />          
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="matching"
         options={{
-          title: 'Explore',
+          title: '이용/알림',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon
+              focused={focused}
+              image={focused ? matchingIconFocused : matchingIcon}
+            />          
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="mypage"
+        options={{
+          title: '마이',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              focused={focused}
+              image={focused ? profileIconFocused : profileIcon}
+            />          
           ),
         }}
       />
