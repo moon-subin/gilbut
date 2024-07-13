@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { useNavigation } from '@react-navigation/native';
 
-import Header from '../../components/PagingHeader';
+import Header from '../../components/Header';
 
 interface ButtonProps {
     title: string,

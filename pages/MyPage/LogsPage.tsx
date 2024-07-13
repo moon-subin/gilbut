@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 
 import LogContainer from '@/components/LogContainer';
-import Header from '../../components/PagingHeader';
+import Header from '../../components/Header';
 
 const bracketLIcon = require('../../assets/images/bracketLIcon.png');
 
@@ -18,7 +18,7 @@ export default function Logs() {
                 title="기록"
                 naviPage='TabThreeScreen'></Header>
             <View style={{backgroundColor: Colors.headerBg}}>
-                <ScrollView>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.logContainer}>
                         <LogContainer />
                     </View>

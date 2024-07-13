@@ -26,7 +26,7 @@ export default function TabThreeScreen() {
     const totalLevelCnt = 9;
 
     return (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             {/* 홈 헤더 */}
             <View style={styles.header}>
                 <Text style={styles.titleText}>홈</Text>

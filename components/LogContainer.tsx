@@ -24,7 +24,7 @@ export default function LogContainer() {
     }, {});
 
     return (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             {Object.keys(groupedData).map(month => (
                 <View key={month}>
                     <Text style={styles.monthHeader}>{parseInt(month, 10)}월</Text>
