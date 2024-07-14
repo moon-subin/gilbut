@@ -5,6 +5,7 @@ export const Colors = {
   yellow: '#FFCD4A',
   darkYellow: 'rgba(255, 184, 0, 1)',
   gray: 'rgba(126, 126, 126, 1)',
+  mapOverlayBg: 'rgba(205, 205, 205, 0.5)',
   lightGray: 'rgba(219, 219, 219, 1)',
   gray_modalBg: 'rgba(93, 93, 93, 1)',
   gray_mypageFont: 'background: rgba(113, 113, 113, 1)',

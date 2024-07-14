@@ -7,6 +7,9 @@ import { UserLocationContext } from '@/Context/UserLocationContext';
 import PlaceSearchBar from '@/components/Search/PlaceSearchBar';
 import PlacesList from '@/components/Search/PlacesList';
 import requestInfoList from '../../assets/datas/requestInfoList';
+import ClientLocationMarker from '@/components/Map/ClientLocationMarker';
+
+import { Colors } from '@/constants/Colors';
 
 export default function HomeScreen() {
     // const [myLocation, setMyLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -70,16 +73,18 @@ export default function HomeScreen() {
           region={mapRegion}
         >
             {selectedPlace && (
-                    <Marker
-                        coordinate={{
-                            latitude: selectedPlace.clientLocation.coord.latitude,
-                            longitude: selectedPlace.clientLocation.coord.longitude,
-                        }}
-                        title={selectedPlace.clientLocation.name}
-                    />
-                )}
+                // <Marker
+                //     coordinate={{
+                //         latitude: selectedPlace.clientLocation.coord.latitude,
+                //         longitude: selectedPlace.clientLocation.coord.longitude,
+                //     }}
+                //     title={selectedPlace.clientLocation.name}
+                // />
+                <ClientLocationMarker item={selectedPlace} />
+            )}
         </MapView>
-        <View style={{position:'absolute',zIndex:20,bottom:50}}>
+        {/* <View style={styles.overlay} /> */}
+        <View style={styles.placesListContainer}>
           <PlacesList placesList={requestInfoList} onSelectPlace={setSelectedPlace} />
         </View>
       </View>
@@ -93,5 +98,17 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: '100%',
+        opacity: 0.5,
     },
+    overlay: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      backgroundColor: Colors.mapOverlayBg,
+    },
+    placesListContainer: {
+      position: 'absolute',
+      zIndex: 20,
+      bottom: 50,
+  },
 });

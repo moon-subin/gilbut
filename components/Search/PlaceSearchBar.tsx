@@ -23,7 +23,7 @@ export default function PlaceSearchBar({placeholder}) {
             >
                 <TextInput
                     placeholder="장소 검색"
-                    style={{ backgroundColor: Colors.white, width: "90%" }}
+                    style={{ backgroundColor: Colors.white, width: "100%" }}
                     onChangeText={(value) => setSearchInput(value)}
                     // onSubmitEditing={() => setSearchText(searchInput)}
                 />
@@ -36,7 +36,7 @@ export default function PlaceSearchBar({placeholder}) {
 
 const styles = StyleSheet.create({
     micBtn: {
-        backgroundColor: Colors.yellow,
+        // backgroundColor: Colors.yellow,
         width: "20%",
         height: "100%",
         alignItems: 'center',

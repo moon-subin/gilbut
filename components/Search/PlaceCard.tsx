@@ -41,6 +41,7 @@ export default function PlaceCard({ place }) {
 const styles = StyleSheet.create({
     cardContainer: {
         width: "100%",
+        height: 200,
         backgroundColor: Colors.white,
         borderRadius: 12.5,
         paddingVertical: 20,

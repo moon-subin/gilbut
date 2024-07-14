@@ -6,7 +6,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -15,7 +15,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -24,7 +24,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -33,7 +33,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -42,7 +42,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -51,7 +51,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -60,7 +60,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -69,7 +69,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -78,7 +78,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -87,7 +87,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -96,7 +96,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -105,7 +105,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -114,7 +114,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -123,7 +123,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -132,7 +132,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -141,7 +141,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -150,7 +150,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
     {
         accompanyName: '카페조하',
@@ -159,7 +159,7 @@ const userLogList = [
         finishTime: '09:58',
         startLoc: '이화여대 정문',
         finishLoc: '카페 아늑',
-        fee: '1800',
+        time: '17',
     },
 ];
 

@@ -56,8 +56,8 @@ export default function LogContainer() {
                                             <Text style={styles.logRightText}>{item.finishLoc}</Text>
                                         </View>
                                         <View style={styles.row}>
-                                            <Text style={styles.logLeftText}>금액 | </Text>
-                                            <Text style={styles.logRightText}>{item.fee}원</Text>
+                                            <Text style={styles.logLeftText}>시간 | </Text>
+                                            <Text style={styles.logRightText}>{item.time}분</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     divLine: {
         width: 0.5,
         backgroundColor: 'rgba(126, 126, 126, 1)',
-        marginHorizontal: 10,
+        marginLeft: 20,
+        marginRight: 10,
     }
 });
