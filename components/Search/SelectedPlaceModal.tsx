@@ -1,9 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Colors } from '@/constants/Colors';
 import isLastConstant from '../IsLastConstant';
+
+const profile = require('../../assets/images/kittyProfile.png');
+
 
 export default function SelectedPlaceModal({ visible, place, onClose, onViewOtherRequests }) {
     if (!visible) {
@@ -23,25 +26,20 @@ export default function SelectedPlaceModal({ visible, place, onClose, onViewOthe
                         <View style={styles.modalContent}>
                             <Text style={styles.modalTitle}>{place.requestPlace.name}{isLastConstant(place.requestPlace.name)} 가주세요</Text>
                             <View style={styles.place}>
-                                <Text style={styles.content}>목적지 | {place.requestPlace.name}</Text>
+                                <Text style={styles.contentText}>목적지 | {place.requestPlace.name}</Text>
                                 <Text style={styles.location}>{place.requestPlace.location}</Text>
                             </View>
-                                <Text style={styles.content}>예상 소요 시간 | {place.estimatedTime}분</Text>
-                                <Text>의뢰자 위치 | {place.clientLocation.name}</Text>
-                                <Text>의뢰자 정보 | {place.clientInfo}</Text>
-                            <View style={styles.clientRequestContainer}>
-                                <Text>의뢰자 요청사항 | 
-                                    {place.clientRequest === '없음' ? (
-                                        <Text style={styles.value}>{place.clientRequest}</Text>
-                                    ) : (
-                                        <Text style={[styles.value, styles.clientRequestValue]}>{place.clientRequest}</Text>
-                                    )}
-                                </Text>
-                            </View>
+                            <Text style={styles.contentText}>예상 소요 시간 | {place.estimatedTime}분</Text>
+                            <Text style={styles.contentText}>의뢰자 위치 | {place.clientLocation.name}</Text>
+                            <Text style={styles.contentText}>의뢰자 정보 | {place.clientInfo}</Text>
+                            <Text style={styles.contentText}>의뢰자 요청사항 | {place.clientRequest}</Text>
                         </View>
                         {/* 의뢰자 프로필 */}
                         <View style={styles.profileContent}>
-                            <Text>{place.clientName}</Text>
+                            <Image source={profile} style={styles.clientProfile}></Image>
+                            <Text style={styles.profileText}>{place.clientName} 님</Text>
+                            {/* 클라이언트 성별/나이 */}
+                            <Text style={styles.profileText}>(여성 | 20대)</Text>
                         </View>
                     </View>
 
@@ -79,39 +77,34 @@ const styles = StyleSheet.create({
         height: 450,
         backgroundColor: Colors.white,
         borderRadius: 10,
+        // padding: 10,
     },
     horizontalContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         // width: 350,
-        padding: 20,
-        marginBottom: 20,
+        paddingVertical: 30,
+        paddingHorizontal: 20,
+        // marginBottom: 20,
     },
-    // modalContent: {
-    //     width: 350,
-    //     height: 450,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     backgroundColor: Colors.white,
-    //     borderRadius: 10,
-    //     shadowColor: '#000',
-    //     shadowOffset: { width: 0, height: 4 },
-    //     shadowOpacity: 0.25,
-    //     shadowRadius: 4,
-    //     elevation: 5,
-    // },
     modalContent: {
         flex: 1,
-        marginRight: 10,
+        // marginRight: 10,
+        // width: "70%",
     },
     profileContent: {
         flex: 1,
-        marginLeft: 10,
+        // marginLeft: 10,
+        // width: "30%",
+        alignItems: 'center',
+        position: 'absolute',
+        top: 30,
+        right: 20,
     },
     modalTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
+        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 10,
     },
     modalDescription: {
         fontSize: 18,
@@ -125,6 +118,20 @@ const styles = StyleSheet.create({
         color: Colors.gray,
         fontSize: 10,
     },
+    contentText: {
+        fontSize: 15,
+        fontWeight: '500',
+        marginTop: 10,
+    },
+    clientProfile: {
+        width: 36,
+        height: 36,
+        marginBottom: 5,
+    },
+    profileText: {
+        fontSize: 12,
+        color: Colors.gray,
+    },
     distanceContent: {
         width: 350,
         height: 50,
@@ -136,19 +143,26 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: "100%",
+        position: 'absolute',
+        bottom: 0,
     },
     acceptButton: {
         backgroundColor: Colors.yellow,
         width: "50%",
+        height: 70,
         alignItems: 'center',
+        justifyContent: 'center',
         borderTopWidth: 1,
         borderTopColor: Colors.lightGray,
         borderRightWidth: 0.5,
         borderRightColor: Colors.lightGray,
+        borderBottomLeftRadius: 10,
     },
     viewOtherButton: {
         width: "50%",
+        height: 70,
         alignItems: 'center',
+        justifyContent: 'center',
         borderTopWidth: 1,
         borderTopColor: Colors.lightGray,
         borderLeftWidth: 0.5,

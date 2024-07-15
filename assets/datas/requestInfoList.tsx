@@ -1,3 +1,5 @@
+// 회원 정보 포함 해야 할듯
+
 const requestInfoList = [
     {  
         requestPlace: {

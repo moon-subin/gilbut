@@ -8,7 +8,7 @@ import { UserLocationContext } from '@/Context/UserLocationContext';
 const Stack = createNativeStackNavigator();
 
 
-export default function MyPage() {
+export default function HomePage() {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -29,10 +29,10 @@ export default function MyPage() {
     }, []);
 
     return (
-        <UserLocationContext.Provider value={{ location, setLocation }}>
+        // <UserLocationContext.Provider value={{ location, setLocation }}>
             <Stack.Navigator>
                 <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
-        </UserLocationContext.Provider>
+        // </UserLocationContext.Provider>
     );
 }

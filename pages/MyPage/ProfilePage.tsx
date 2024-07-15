@@ -15,7 +15,7 @@ const editIcon = require('../../assets/images/editIcon.png');
 const profile = require('../../assets/images/kittyProfile.png');
 const divBox = require('../../assets/images/divBox.png');
 
-export default function TabThreeScreen() {
+export default function ProfilePage() {
     const navigation = useNavigation();
 
     const userName = '멍충키티';
