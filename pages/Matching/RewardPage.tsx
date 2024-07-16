@@ -22,15 +22,16 @@ export default function FinedNotifyPage() {
     return (
         <View style={styles.container}>
             <View style={styles.messageContainer}>
-                <Text style={styles.messageText}>성공적으로 의뢰를 완료했어요!</Text>
-                <Text style={styles.pointsText}>+ {points}원</Text>
+                <Text style={styles.messageText}>응답시간이 지났으므로{"\n"}벌금을 부과합니다</Text>
+                {/* 수정 */}
+                <Text style={styles.pointsText}>-...원</Text>
             </View>
             <Image source={successCheck} style={styles.image} />
             <View style={styles.messageContainer}>
                 <TouchableOpacity onPress={goToHome}>
-                    <Text style={styles.buttonText}>다른 의뢰 보러가기</Text>
+                    <Text style={styles.buttonText}>벌금 현황 보러가기</Text>
                 </TouchableOpacity>
-                <Text style={styles.leftCntText}>의뢰를 {totalLevelCnt-currLevelCnt}번 더 완료하면 LEVEL UP!</Text>
+                <Text style={styles.leftCntText}>항상 부지런하게 응답해주세요 ;)</Text>
             </View>
         </View>
     );

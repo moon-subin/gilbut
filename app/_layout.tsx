@@ -36,30 +36,27 @@ export default function RootLayout() {
     return null;
   }
 
-  useEffect(() => {
-    (async () => {
-      
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+  // useEffect(() => {
+  //   (async () => {
+  //       let { status } = await Location.requestForegroundPermissionsAsync();
+  //       if (status !== 'granted') {
+  //           setErrorMsg('Permission to access location was denied');
+  //           return;
+  //       }
 
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    //   console.log(location);
-    })();
-  }, []);
+  //       let location = await Location.getCurrentPositionAsync({});
+  //       setLocation(location);
+  //   })();
+  // }, []);
 
   return (
-    <UserLocationContext.Provider value={{ location, setLocation }}>
+    // <UserLocationContext.Provider value={{ location, setLocation }}>
       <Stack>
         <Stack.Screen name="sign-up" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="logs" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-    </UserLocationContext.Provider>
-
+    // </UserLocationContext.Provider>
   );
 }

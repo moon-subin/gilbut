@@ -12,35 +12,6 @@ import ClientLocationMarker from '@/components/Map/ClientLocationMarker';
 import { Colors } from '@/constants/Colors';
 
 export default function HomeScreen() {
-    // const [myLocation, setMyLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-    // const mapRef = useRef<MapView | null>(null);
-
-
-    // useEffect(() => {
-    //     (async () => {
-    //       try {
-    //         const {granted} = await Location.requestForegroundPermissionsAsync();
-    //         /**
-    //          * Note: Foreground permissions should be granted before asking for the background permissions
-    //          * (your app can't obtain background permission without foreground permission).
-    //          */
-    //         if(granted) {
-    //           await Location.requestBackgroundPermissionsAsync();
-    //         }
-    //       } catch(e) {
-    //         console.error(`Location request has been failed: ${e}`);
-    //       }
-    //     })();
-    // }, []);
-
-    // if (!location) {
-    //   return (
-    //       <View style={styles.container}>
-    //           <Text>Loading...</Text>
-    //       </View>
-    //   );
-    // }
-
     const [mapRegion, setmapRegion] = useState(null);
     const [selectedPlace, setSelectedPlace] = useState(null);
 
@@ -73,13 +44,6 @@ export default function HomeScreen() {
           region={mapRegion}
         >
             {selectedPlace && (
-                // <Marker
-                //     coordinate={{
-                //         latitude: selectedPlace.clientLocation.coord.latitude,
-                //         longitude: selectedPlace.clientLocation.coord.longitude,
-                //     }}
-                //     title={selectedPlace.clientLocation.name}
-                // />
                 <ClientLocationMarker item={selectedPlace} />
             )}
         </MapView>

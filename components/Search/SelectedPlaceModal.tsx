@@ -4,11 +4,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { Colors } from '@/constants/Colors';
 import isLastConstant from '../IsLastConstant';
+import DistanceView from '../DistanceView';
 
 const profile = require('../../assets/images/kittyProfile.png');
+const distLine = require('../../assets/images/distLine.png');
 
-
-export default function SelectedPlaceModal({ visible, place, onClose, onViewOtherRequests }) {
+export default function SelectedPlaceModal({ visible, place, onAccept, onViewOtherRequests }) {
     if (!visible) {
         return null;
     }
@@ -17,7 +18,7 @@ export default function SelectedPlaceModal({ visible, place, onClose, onViewOthe
         <Modal
             visible={visible}
             transparent={true}
-            onRequestClose={onClose}
+            onRequestClose={onAccept}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContainer2}>
@@ -44,14 +45,11 @@ export default function SelectedPlaceModal({ visible, place, onClose, onViewOthe
                     </View>
 
                     {/* 장소 사이 거리 */}
-                    <View style={styles.distanceContent}>
-                        <Text>{place.distToClient}</Text>
-                        <Text>{place.distToFin}</Text>
-                    </View>
+                    <DistanceView place={place} />
 
                     {/* 버튼 */}
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.acceptButton} onPress={onClose}>
+                        <TouchableOpacity style={styles.acceptButton} onPress={onAccept}>
                             <Text style={styles.buttonText}>의뢰 수락</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.viewOtherButton} onPress={onViewOtherRequests}>
@@ -85,7 +83,7 @@ const styles = StyleSheet.create({
         // width: 350,
         paddingVertical: 30,
         paddingHorizontal: 20,
-        // marginBottom: 20,
+        marginBottom: 20,
     },
     modalContent: {
         flex: 1,
@@ -132,13 +130,26 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: Colors.gray,
     },
+    // 거리
     distanceContent: {
         width: 350,
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
+        // marginBottom: 20,
     },
+    distImgContent: {
+        flexDirection: 'row',
+    },
+    distProfile: {
+        width: 25,
+        height: 25,
+    },
+    distLine: {
+        
+    },
+
+    // 버튼
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',

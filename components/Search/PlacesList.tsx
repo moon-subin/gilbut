@@ -33,8 +33,11 @@ export default function PlacesList({ placesList, onSelectPlace }) {
         setIsGrid(!isGrid); // Toggle layout state
     };
 
-    const handleCloseModal = () => {
+    const handleAcceptRequest = () => {
         setShowDetailModal(false);
+        if (selectedPlace) {
+            navigation.navigate('matching', { screen: 'PathToRequesterMap', place: {selectedPlace}});
+        }
     };
 
     const handleViewOtherRequests = () => {
@@ -91,7 +94,7 @@ export default function PlacesList({ placesList, onSelectPlace }) {
             <SelectedPlaceModal
                 visible={showDetailModal}
                 place={selectedPlace}
-                onClose={handleCloseModal}
+                onAccept={handleAcceptRequest}
                 onViewOtherRequests={handleViewOtherRequests}
             />
         </View>
