@@ -36,7 +36,8 @@ export default function PlacesList({ placesList, onSelectPlace }) {
     const handleAcceptRequest = () => {
         setShowDetailModal(false);
         if (selectedPlace) {
-            navigation.navigate('matching', { screen: 'PathToRequesterMap', place: {selectedPlace}});
+            // console.log('selectedPlace: ', selectedPlace);
+            navigation.navigate('matching', { screen: 'PathToRequesterMap', params: { request: selectedPlace }});
         }
     };
 

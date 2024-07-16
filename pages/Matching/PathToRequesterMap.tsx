@@ -1,21 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { UserLocationContext } from '@/Context/UserLocationContext';
+import { useRoute } from '@react-navigation/native'; 
 
 import { Colors } from '@/constants/Colors';
+import RouteInfoView from '@/components/Map/RouteInfoView';
 
 export default function PathToRequesterMap() {
     const { location } = useContext(UserLocationContext);
+    const route = useRoute();
+
+    // console.log(route.params.request);
+    const selectedRequest = route.params.request;
 
     const [mapRegion, setmapRegion] = useState(null);
-    const [selectedPlace, setSelectedPlace] = useState(null);
     const [destination, setDestination] = useState(null);
     const [time, setTime] = useState(null);
-    const [phase, setPhase] = useState(1); // 1: 의뢰자에게 가는 상황, 2: 의뢰자와 목적지로 가는 상황
 
+    // 1: 의뢰자에게 가는 중, 2: 의뢰자와 목적지로 가는 중
+    const [phase, setPhase] = useState(1); 
 
-    console.log('selectedPlace ', selectedPlace);
 
     useEffect(() => {
         if (location) {
@@ -31,8 +36,9 @@ export default function PathToRequesterMap() {
     useEffect(() => {
         if (phase === 1) {
             // 의뢰자에게 가는 상황의 목적지와 예상 시간 설정
-            setDestination({ latitude: 37.78825, longitude: -122.4324 }); // 의뢰자의 위치로 변경
-            setTime('10 minutes'); // 예상 소요 시간
+
+            // Distance Matrix API component 만들 것 ....
+
         } else if (phase === 2) {
             // 의뢰자와 목적지로 가는 상황의 목적지와 예상 시간 설정
             setDestination({ latitude: 37.78925, longitude: -122.4394 }); // 의뢰자의 목적지로 변경
@@ -50,6 +56,12 @@ export default function PathToRequesterMap() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.infoContainer}>
+                <Text>Destination: {destination ? `${destination.latitude}, ${destination.longitude}` : 'N/A'}</Text>
+                <Text>Estimated Time: {time}</Text>
+            </View>
+            <RouteInfoView phase={phase} routeInfo={selectedRequest} />
+
             <MapView
                 style={styles.map}
                 region={mapRegion}
@@ -59,14 +71,9 @@ export default function PathToRequesterMap() {
                 )}
             </MapView>
 
-            <View style={styles.infoContainer}>
-                <Text>Destination: {destination ? `${destination.latitude}, ${destination.longitude}` : 'N/A'}</Text>
-                <Text>Estimated Time: {time}</Text>
-            </View>
-
             <TouchableOpacity style={styles.arrivalBtnContainer} onPress={handlePress}>
                 <Text style={styles.btnText}>
-                    {phase === 1 ? 'Meet the Requester' : 'Go to Destination'}
+                    {phase === 1 ? '의뢰자 만남' : '의뢰 장소 도착'}
                 </Text>
             </TouchableOpacity>
         </View>
@@ -82,12 +89,12 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         position: 'absolute',
-        top: 10,
-        left: 10,
-        right: 10,
-        backgroundColor: 'white',
-        padding: 10,
-        borderRadius: 10,
+        zIndex: 20,
+        backgroundColor: Colors.white,
+        width: "100%",
+        height: 250,
+        paddingTop: 60,
+        paddingHorizontal: 20,
     },
     arrivalBtnContainer: {
         position: 'absolute',
@@ -96,12 +103,22 @@ const styles = StyleSheet.create({
         right: 20,
         backgroundColor: Colors.yellow,
         padding: 15,
-        borderRadius: 10,
+        borderRadius: 8,
         alignItems: 'center',
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 2, height: 4 },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     },
     btnText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
+        fontSize: 24,
+        fontWeight: '600',
     },
 });
