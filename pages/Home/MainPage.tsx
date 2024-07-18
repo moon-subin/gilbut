@@ -8,6 +8,24 @@ import PlaceSearchBar from '@/components/Search/PlaceSearchBar';
 import PlacesList from '@/components/Search/PlacesList';
 import requestInfoList from '../../assets/datas/requestInfoList';
 import ClientLocationMarker from '@/components/Map/ClientLocationMarker';
+// import NaverMapView from '../../components/Map/index';
+
+import {
+  type MapType,
+  type NaverMapViewRef,
+  type Camera,
+  type ClusterMarkerProp,
+  type Region,
+  NaverMapView,
+  NaverMapCircleOverlay,
+  NaverMapPolygonOverlay,
+  NaverMapPathOverlay,
+  NaverMapArrowheadPathOverlay,
+  NaverMapGroundOverlay,
+  NaverMapPolylineOverlay,
+  NaverMapMarkerOverlay,
+} from '@mj-studio/react-native-naver-map';
+
 
 import { Colors } from '@/constants/Colors';
 
@@ -33,6 +51,7 @@ export default function HomeScreen() {
     // console.log("location.coords: ", location.coords);
 
     // console.log(selectedPlace.clientLocation.coord);
+    
     return (
       <View style={styles.container}>
         <View style={{position:'absolute',zIndex:20,top:70,left:"5%",right:"5%",width:"80%"}}>
@@ -47,9 +66,8 @@ export default function HomeScreen() {
                 <ClientLocationMarker item={selectedPlace} />
             )}
         </MapView>
-        {/* <View style={styles.overlay} /> */}
         <View style={styles.placesListContainer}>
-          <PlacesList placesList={requestInfoList} onSelectPlace={setSelectedPlace} />
+          <PlacesList placesList={requestInfoList} onSelectPlace={setSelectedPlace} region={mapRegion} />
         </View>
       </View>
     );

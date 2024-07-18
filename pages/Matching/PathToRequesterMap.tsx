@@ -1,74 +1,138 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Platform, Dimensions } from 'react-native';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { UserLocationContext } from '@/Context/UserLocationContext';
 import { useRoute } from '@react-navigation/native'; 
+import { GooglePlaceDetail, GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapViewDirections from "react-native-maps-directions";
+import Constants from "expo-constants";
+import axios from 'axios';
+
+import getWalkingRoute from '@/utils/getWalkingRoute';
 
 import { Colors } from '@/constants/Colors';
 import RouteInfoView from '@/components/Map/RouteInfoView';
+import { GOOGLEMAP_KEY, TMAP_KEY } from '@env';
+
+const { width, height } = Dimensions.get("window");
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.02;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function PathToRequesterMap() {
-    const { location } = useContext(UserLocationContext);
+    // const { location } = useContext(UserLocationContext);
     const route = useRoute();
 
     // console.log(route.params.request);
     const selectedRequest = route.params.request;
+    const myLocation = route.params.region;
 
-    const [mapRegion, setmapRegion] = useState(null);
+    // const [mapRegion, setmapRegion] = useState(null);
+    const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
     const [time, setTime] = useState(null);
 
     // 1: 의뢰자에게 가는 중, 2: 의뢰자와 목적지로 가는 중
     const [phase, setPhase] = useState(1); 
 
+    const [mapRegion, setMapRegion] = useState({
+        latitude: myLocation.latitude,
+        longitude: myLocation.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+    });
+
+    const [showDirections, setShowDirections] = useState(false);
+    const [distance, setDistance] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [routeCoords, setRouteCoords] = useState([]);
+    const mapRef = useRef<MapView>(null);
 
     useEffect(() => {
-        if (location) {
-            setmapRegion({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.0422,
-                longitudeDelta: 0.0421,
-            });
+        if (selectedRequest) {
+            if (phase === 1) {
+                setOrigin({
+                    latitude: myLocation.latitude,
+                    longitude: myLocation.longitude,
+                }),
+                setDestination({
+                    latitude: selectedRequest.clientLocation.coord.latitude,
+                    longitude: selectedRequest.clientLocation.coord.longitude,
+                });
+            } else if (phase === 2) {
+                setOrigin({
+                    latitude: selectedRequest.clientLocation.coord.latitude,
+                    longitude: selectedRequest.clientLocation.coord.longitude,
+                }),
+                setDestination({
+                    latitude: selectedRequest.requestPlace.coord.latitude,
+                    longitude: selectedRequest.requestPlace.coord.longitude,
+                });
+            }
         }
-    }, [location]);
+    }, [phase, selectedRequest]);
+
 
     useEffect(() => {
-        if (phase === 1) {
-            // 의뢰자에게 가는 상황의 목적지와 예상 시간 설정
+        const fetchRoute = async () => {
+            if (origin && destination) {
+                const routeData = await getWalkingRoute(origin, destination);
+                // console.log('routeData: ', routeData);
+                if (routeData) {
+                    drawRoute(routeData);
+                }
 
-            // Distance Matrix API component 만들 것 ....
+            }
+        };
+        fetchRoute();
+    }, [origin, destination]);
 
-        } else if (phase === 2) {
-            // 의뢰자와 목적지로 가는 상황의 목적지와 예상 시간 설정
-            setDestination({ latitude: 37.78925, longitude: -122.4394 }); // 의뢰자의 목적지로 변경
-            setTime('15 minutes'); // 예상 소요 시간
+
+    const drawRoute = (features) => {
+        const coords = [];
+        // console.log('features: ', features);
+        for (let i = 0; i < features.length; i++) {
+            const feature = features[i];
+            // console.log('feature: ', feature);
+            if (feature.geometry.type === 'LineString') {
+                const lineCoords = feature.geometry.coordinates;
+                // console.log('lineCoords: ', lineCoords);
+                for (let j = 0; j < lineCoords.length; j++) {
+                    const coord = lineCoords[j];
+                    const latitude = coord[1];  // 위도
+                    const longitude = coord[0]; // 경도
+                    coords.push({ latitude, longitude });
+                }
+            }
         }
-    }, [phase]);
+        console.log('coords: ', coords);
+        setRouteCoords(coords);
+    };
 
+    
     const handlePress = () => {
         if (phase === 1) {
             setPhase(2);
         } else {
             // 목적지에 도착했을 때의 로직 추가
+            // 도착 확정 요청 모달
         }
     };
+      
 
     return (
         <View style={styles.container}>
-            <View style={styles.infoContainer}>
-                <Text>Destination: {destination ? `${destination.latitude}, ${destination.longitude}` : 'N/A'}</Text>
-                <Text>Estimated Time: {time}</Text>
-            </View>
-            <RouteInfoView phase={phase} routeInfo={selectedRequest} />
+            <RouteInfoView phase={phase} routeInfo={selectedRequest} myLatitude={myLocation.latitude} myLongitude={myLocation.longitude} />
 
             <MapView
                 style={styles.map}
                 region={mapRegion}
+                ref={mapRef}
             >
-                {destination && (
-                    <Marker coordinate={destination} />
-                )}
+
+                {origin && <Marker coordinate={origin} />}
+                {destination && <Marker coordinate={destination} />}
+                {routeCoords.length > 0 && <Polyline coordinates={routeCoords} />}
             </MapView>
 
             <TouchableOpacity style={styles.arrivalBtnContainer} onPress={handlePress}>

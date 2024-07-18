@@ -1,6 +1,6 @@
 import { ScrollViewStyleReset } from 'expo-router/html';
 import { type PropsWithChildren } from 'react';
-import { KAKAOMAP_API } from '@env';
+import { KAKAOMAP_API, TMAP_KEY } from '@env';
 
 /**
  * This file is web-only and used to configure the root HTML for every web page during static rendering.
@@ -14,10 +14,12 @@ export default function Root({ children }: PropsWithChildren) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         
-        <script
+        {/* <script
           type="text/javascript"
           src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAOMAP_API}`}
-        ></script>
+        ></script> */}
+
+        <script src={`https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=${TMAP_KEY}`}></script>
         
         {/*
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native.

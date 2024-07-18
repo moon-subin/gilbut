@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-export default function PlacesList({ placesList, onSelectPlace }) {
+export default function PlacesList({ placesList, onSelectPlace, region }) {
     const navigation=useNavigation();
     const flatListRef = useRef(null);
     const [isGrid, setIsGrid] = useState(false);
@@ -31,13 +31,15 @@ export default function PlacesList({ placesList, onSelectPlace }) {
 
     const handleToggleLayout = () => {
         setIsGrid(!isGrid); // Toggle layout state
+        console.log(region);
+
     };
 
     const handleAcceptRequest = () => {
         setShowDetailModal(false);
         if (selectedPlace) {
             // console.log('selectedPlace: ', selectedPlace);
-            navigation.navigate('matching', { screen: 'PathToRequesterMap', params: { request: selectedPlace }});
+            navigation.navigate('matching', { screen: 'PathToRequesterMap', params: { request: selectedPlace, region: region}});
         }
     };
 
