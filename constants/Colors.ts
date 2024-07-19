@@ -4,6 +4,7 @@ export const Colors = {
   white_myprofileBg: 'rgba(251, 251, 251, 1)',
   yellow: '#FFCD4A',
   darkYellow: 'rgba(255, 184, 0, 1)',
+  innerYellow: 'rgba(255, 205, 75, 0.56)',
   gray: 'rgba(126, 126, 126, 1)',
   mapOverlayBg: 'rgba(205, 205, 205, 0.5)',
   lightGray: 'rgba(219, 219, 219, 1)',

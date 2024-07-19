@@ -12,6 +12,7 @@ import getWalkingRoute from '@/utils/getWalkingRoute';
 
 import { Colors } from '@/constants/Colors';
 import RouteInfoView from '@/components/Map/RouteInfoView';
+import ConfirmedArrivalModal from '@/components/Map/ConfirmedArrivalModal';
 import { GOOGLEMAP_KEY, TMAP_KEY } from '@env';
 
 const routeCircleMarker = require('../../assets/images/routeCircleMarker.png');
@@ -48,6 +49,8 @@ export default function PathToRequesterMap() {
     const [time, setTime] = useState(0);
     const [routeCoords, setRouteCoords] = useState([]);
     const mapRef = useRef<MapView>(null);
+
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     useEffect(() => {
         if (selectedRequest) {
@@ -112,8 +115,17 @@ export default function PathToRequesterMap() {
         } else {
             // 목적지에 도착했을 때의 로직 추가
             // 도착 확정 요청 모달
+            setShowConfirmModal(true);
         }
     };      
+
+    const handleRequestConfirm = () => {
+        setShowConfirmModal(false);
+    }
+
+    const handleCancel = () => {
+        setShowConfirmModal(false);
+    }
 
     return (
         <View style={styles.container}>
@@ -144,6 +156,14 @@ export default function PathToRequesterMap() {
                     {phase === 1 ? '의뢰자 만남' : '의뢰 장소 도착'}
                 </Text>
             </TouchableOpacity>
+
+            <ConfirmedArrivalModal
+                visible={showConfirmModal}
+                onConfirm={handleRequestConfirm}
+                onCencel={handleCancel}
+                placeName={selectedRequest.requestPlace.name}
+                clientName={selectedRequest.clientName}
+            />
         </View>
     );
 }
