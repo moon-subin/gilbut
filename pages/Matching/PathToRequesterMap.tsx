@@ -14,6 +14,9 @@ import { Colors } from '@/constants/Colors';
 import RouteInfoView from '@/components/Map/RouteInfoView';
 import { GOOGLEMAP_KEY, TMAP_KEY } from '@env';
 
+const routeCircleMarker = require('../../assets/images/routeCircleMarker.png');
+
+
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.02;
@@ -30,7 +33,6 @@ export default function PathToRequesterMap() {
     // const [mapRegion, setmapRegion] = useState(null);
     const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
-    const [time, setTime] = useState(null);
 
     // 1: 의뢰자에게 가는 중, 2: 의뢰자와 목적지로 가는 중
     const [phase, setPhase] = useState(1); 
@@ -42,9 +44,8 @@ export default function PathToRequesterMap() {
         longitudeDelta: LONGITUDE_DELTA,
     });
 
-    const [showDirections, setShowDirections] = useState(false);
     const [distance, setDistance] = useState(0);
-    const [duration, setDuration] = useState(0);
+    const [time, setTime] = useState(0);
     const [routeCoords, setRouteCoords] = useState([]);
     const mapRef = useRef<MapView>(null);
 
@@ -77,11 +78,11 @@ export default function PathToRequesterMap() {
         const fetchRoute = async () => {
             if (origin && destination) {
                 const routeData = await getWalkingRoute(origin, destination);
-                // console.log('routeData: ', routeData);
                 if (routeData) {
                     drawRoute(routeData);
+                    setDistance(routeData[0].properties.totalDistance);
+                    setTime(routeData[0].properties.totalTime);
                 }
-
             }
         };
         fetchRoute();
@@ -90,13 +91,10 @@ export default function PathToRequesterMap() {
 
     const drawRoute = (features) => {
         const coords = [];
-        // console.log('features: ', features);
         for (let i = 0; i < features.length; i++) {
             const feature = features[i];
-            // console.log('feature: ', feature);
             if (feature.geometry.type === 'LineString') {
                 const lineCoords = feature.geometry.coordinates;
-                // console.log('lineCoords: ', lineCoords);
                 for (let j = 0; j < lineCoords.length; j++) {
                     const coord = lineCoords[j];
                     const latitude = coord[1];  // 위도
@@ -105,10 +103,8 @@ export default function PathToRequesterMap() {
                 }
             }
         }
-        console.log('coords: ', coords);
         setRouteCoords(coords);
     };
-
     
     const handlePress = () => {
         if (phase === 1) {
@@ -117,12 +113,16 @@ export default function PathToRequesterMap() {
             // 목적지에 도착했을 때의 로직 추가
             // 도착 확정 요청 모달
         }
-    };
-      
+    };      
 
     return (
         <View style={styles.container}>
-            <RouteInfoView phase={phase} routeInfo={selectedRequest} myLatitude={myLocation.latitude} myLongitude={myLocation.longitude} />
+            <RouteInfoView 
+                phase={phase} 
+                routeInfo={selectedRequest} 
+                myLatitude={myLocation.latitude} 
+                myLongitude={myLocation.longitude}
+                time={time} />
 
             <MapView
                 style={styles.map}
@@ -130,9 +130,13 @@ export default function PathToRequesterMap() {
                 ref={mapRef}
             >
 
-                {origin && <Marker coordinate={origin} />}
-                {destination && <Marker coordinate={destination} />}
-                {routeCoords.length > 0 && <Polyline coordinates={routeCoords} />}
+                {origin && <Marker coordinate={origin} image={routeCircleMarker} />}
+                {destination && <Marker coordinate={destination} image={routeCircleMarker} />}
+                {routeCoords.length > 0 && 
+                    <Polyline 
+                        coordinates={routeCoords}
+                        strokeWidth={4} 
+                    />}
             </MapView>
 
             <TouchableOpacity style={styles.arrivalBtnContainer} onPress={handlePress}>

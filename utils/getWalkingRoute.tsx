@@ -21,7 +21,6 @@ const getWalkingRoute = async (start, end) => {
         appKey: TMAP_KEY,
       },
     });
-    // console.log('res.data.features: ', response.data.features[0]);
 
     if (response.data.features) {
       return response.data.features;

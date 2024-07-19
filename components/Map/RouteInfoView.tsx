@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import { GooglePlaceDetail, GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapViewDirections from "react-native-maps-directions";
   
@@ -7,15 +7,21 @@ import { Colors } from '@/constants/Colors';
 import axios from 'axios';
 import { GOOGLEMAP_KEY } from '@env';
 
-export default function RouteInfoView({ phase, routeInfo, myLatitude, myLongitude }) {
+const refreshBtn = require('../../assets/images/refresh.png');
+const profile = require('../../assets/images/kittyProfile.png');
+
+export default function RouteInfoView({ phase, routeInfo, myLatitude, myLongitude, time }) {
 
     // 1일 때 필요한 값
     // 내 위치(위도, 경도), 내 프로필
     // 의뢰자 위치(위도, 경도), 의뢰자 프로필 
 
+    const roundedTime = Math.ceil(time/60);
+
     const title = phase ? '의뢰자에게 가는 중' : '의뢰자의 목적지로 가는 중';
-    const button = phase ? '수락 취소' : '신고하기';
-    const time = phase ? '' : '';
+    const cancel = phase ? '수락 취소' : '신고하기';
+    // const time = phase ? '' : '';
+    const timeContent = phase ? '의뢰자에게 도착 예정' : '목적지에 도착 예정';
 
     const [route, setRoute] = useState([]);
     const options = {
@@ -30,25 +36,44 @@ export default function RouteInfoView({ phase, routeInfo, myLatitude, myLongitud
 
     return (
         <View style={styles.infoContainer}>
-            <Text>{title}</Text>
-            <Text>{button}</Text>
-            <Text>{phase}</Text>
-            <Text>{routeInfo.requestPlace.name}</Text>
-            <Text>{routeInfo.requestPlace.coord.latitude}</Text>
-            <Text>{routeInfo.requestPlace.coord.longitude}</Text>
-            <Text>{routeInfo.requestPlace.location}</Text>
-            <Text>{routeInfo.distToFin}</Text>
-            <Text>{routeInfo.distToFin}</Text>
-            <Text>{routeInfo.estimatedTime}</Text>
-            <Text>{routeInfo.clientLocation.name}</Text>
-            <Text>{routeInfo.clientLocation.coord.latitude}</Text>
-            <Text>{routeInfo.clientLocation.coord.longitude}</Text>
-            <Text>{routeInfo.clientLocation.location}</Text>
-            <Text>{routeInfo.clientInfo}</Text>
-            <Text>{routeInfo.clientRequest}</Text>
-            <Text>{routeInfo.clientName}</Text>
-            {/* <Text>Destination: {phase ? `${destination.latitude}, ${destination.longitude}` : 'N/A'}</Text> */}
-            {/* <Text>Estimated Time:</Text> */}
+            <View style={styles.row}>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.cancel}>{cancel}</Text>
+            </View>
+            <View>
+                <Text style={styles.title}>{roundedTime}분 후</Text>
+                <View style={styles.row}>
+                    <View style={styles.row}>
+                        <Text style={styles .title}>{timeContent}</Text>
+                        <TouchableOpacity>
+                            <Image source={refreshBtn} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.row}>
+                        <TouchableOpacity>
+                            <Image source={refreshBtn} />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Image source={refreshBtn} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+            <View style={[styles.clientInfoContainer, styles.row]}>
+                <Image source={profile} />
+                <View>
+                    <View>
+                        <Text>{routeInfo.clientName} 님</Text>
+                        <View>
+                            <Text>{routeInfo.requestPlace.name}</Text>
+                        </View>
+                    </View>
+                    <View>
+                        <Text>여자 | 24세</Text>
+                        <Text>{routeInfo.clientInfo} | {routeInfo.clientRequest}</Text>
+                    </View>
+                </View>
+            </View>
         </View>
 
     );
@@ -61,8 +86,28 @@ const styles = StyleSheet.create({
         zIndex: 20,
         backgroundColor: Colors.white,
         width: "100%",
-        height: 250,
+        height: 300,
         paddingTop: 60,
         paddingHorizontal: 20,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: '700',
+    },
+    cancel: {
+        fontSize: 15,
+        fontWeight: '500',
+    },
+
+
+    clientInfoContainer: {
+        backgroundColor: 'rgba(255, 230, 165, 1)',
+        borderColor: Colors.yellow,
+        borderWidth: 2,
+        borderRadius: 10,
     },
 });

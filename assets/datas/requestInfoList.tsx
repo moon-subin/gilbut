@@ -10,7 +10,7 @@ const requestInfoList = [
         distToFin: "1.1km",
         distToClient: "0.7km",
         estimatedTime: "14",
-        clientLocation: { name: "옹정골길", coord: { latitude: 33.489, longitude: 126.4755 } },
+        clientLocation: { name: "옹정골길", coord: { latitude: 33.4861, longitude: 126.4783 } },
         clientInfo: "전맹",
         clientRequest: "일정 시작이 10시 10분입니다",
         clientName: "카페좋아"
