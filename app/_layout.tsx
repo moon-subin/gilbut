@@ -23,9 +23,6 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SCDream1.otf'),
   });
 
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -36,27 +33,13 @@ export default function RootLayout() {
     return null;
   }
 
-  // useEffect(() => {
-  //   (async () => {
-  //       let { status } = await Location.requestForegroundPermissionsAsync();
-  //       if (status !== 'granted') {
-  //           setErrorMsg('Permission to access location was denied');
-  //           return;
-  //       }
-
-  //       let location = await Location.getCurrentPositionAsync({});
-  //       setLocation(location);
-  //   })();
-  // }, []);
 
   return (
-    // <UserLocationContext.Provider value={{ location, setLocation }}>
-      <Stack>
-        <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="logs" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    // </UserLocationContext.Provider>
+    <Stack>
+      <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="logs" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" />
+    </Stack>
   );
 }

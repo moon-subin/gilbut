@@ -4,6 +4,8 @@ import * as Location from 'expo-location';
 
 import HomeScreen from '@/pages/Home/MainPage';
 import PathToRequesterMap from '@/pages/Matching/PathToRequesterMap';
+import MainPageDisabled from '@/pages/Home/MainPageDisabled';
+import RequestLetter from '@/pages/Home/RequestLetter';
 import TabTwoScreen from './matching';
 import { UserLocationContext } from '@/Context/UserLocationContext';
 
@@ -33,7 +35,9 @@ export default function HomePage() {
     return (
         <UserLocationContext.Provider value={{ location, setLocation }}>
             <Stack.Navigator>
-                <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+                {/* <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} /> */}
+                <Stack.Screen name="MainPageDisabled" component={MainPageDisabled} options={{ headerShown: false }} />
+                <Stack.Screen name="RequestLetter" component={RequestLetter} options={{ headerShown: false }} />
                 <Stack.Screen name="TabTwoScreen" component={TabTwoScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
         </UserLocationContext.Provider>
