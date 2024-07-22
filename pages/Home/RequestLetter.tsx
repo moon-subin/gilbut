@@ -7,6 +7,7 @@ import { GOOGLEMAP_KEY } from '@env';
 import Header from '../../components/Header';
 import PlaceSearchBar from '@/components/Search/PlaceSearchBar';
 import reverseGeocoding from '@/utils/reverseGeocoding';
+import findPlace from '@/utils/findPlace';
 
 export default function RequestLetter() {
     const navigation = useNavigation();
@@ -28,6 +29,16 @@ export default function RequestLetter() {
     }, []);
 
     console.log('address: ', address);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const address = '잠실역 2호선';
+            const data = await findPlace(address);
+            console.log('data: ', data);
+        };
+    
+        fetchData();
+    }, []);
 
 
     return (

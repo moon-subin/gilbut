@@ -11,6 +11,10 @@ import ClientLocationMarker from '@/components/Map/ClientLocationMarker';
 // import NaverMapView from '../../components/Map/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import Voice from 'react-native-voice';
+import { SpeechClient } from '@google-cloud/speech';
+import { GOOGLEMAP_KEY } from '@env';
+import speechToText from '@/utils/speechToText';
 
 
 import { Colors } from '@/constants/Colors';
@@ -22,6 +26,9 @@ export default function MainPageDisabled() {
     const navigation = useNavigation();
     const [mapRegion, setmapRegion] = useState(null);
     const [selectedPlace, setSelectedPlace] = useState(null);
+
+    const [started, setStarted] = useState(false);
+    const [results, setResults] = useState([]);
 
     const { location } = useContext(UserLocationContext);
 
@@ -52,7 +59,7 @@ export default function MainPageDisabled() {
             Alert.alert('Location not available');
         }
     };
-    
+
     
     return (
       <View style={styles.container}>
@@ -74,6 +81,7 @@ export default function MainPageDisabled() {
         <TouchableOpacity style={styles.placesListContainer}>
            <Image source={micIcon} />
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.gpsButton}>
             <Ionicons name="locate-outline" color={Colors.black} size={22} style={styles.gpsIcon} />
         </TouchableOpacity>

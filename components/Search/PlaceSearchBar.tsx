@@ -5,7 +5,7 @@ import { Colors } from '@/constants/Colors';
 const micIcon = require('../../assets/images/mic.png');
 
 export default function PlaceSearchBar({placeholder}) {
-    const [searchInput,setSearchInput]=useState();
+    const [searchInput, setSearchInput]=useState();
 
     return (
             <View style={styles.searchBarContainer}>
