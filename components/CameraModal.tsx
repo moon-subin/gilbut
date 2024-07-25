@@ -1,47 +1,71 @@
-import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image, Pressable } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { WebView } from 'react-native-webview';
+import React, { useEffect, useState, useRef } from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Alert, Image } from 'react-native';
+import { Camera, CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import Constants from 'expo-constants';
 import { Colors } from '@/constants/Colors';
-
-const camLframe = require('../assets/images/camLframe.png');
-const camRframe = require('../assets/images/camRframe.png');
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 
 const photoShoot = require('../assets/images/photoShoot.png');
 
-
-export default function CameraModal() {
-
-    const [facing, setFacing] = useState('back');
+export default function CameraModal({ onClose }) {
     const [permission, requestPermission] = useCameraPermissions();
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
+    const [image, setImage] = useState(null);
+    const [facing, setFacing] = useState<CameraType>('back');
+    const cameraRef = useRef(null);
 
-    // if (!permission) {
-    //     // Camera permissions are still loading.
-    //     return <View />;
-    // }
-    
-    // if (!permission.granted) {
-    //     // Camera permissions are not granted yet.
-    //     return (
-    //       <View style={styles.container}>
-    //         <Text style={{ textAlign: 'center' }}>카메라 접근을 허용하시겠습니까?</Text>
-    //         <Button onPress={requestPermission} title="네" />
-    //       </View>
-    //     );
-    // }
-    
-    function toggleCameraFacing() {
-        setFacing(current => (current === 'back' ? 'front' : 'back'));
+    if (!permission) {
+        // Camera permissions are still loading.
+        return <Text>No access to camera</Text>
     }
+
+    if (!permission.granted) {
+        // Camera permissions are not granted yet.
+        return (
+            <View style={styles.container}>
+                <Text style={{textAlign: 'center',}}>We need your permission to show the camera</Text>
+                <Button onPress={requestPermission} title="grant permission" />
+            </View>
+        );
+    }
+
+    const takePicture = async () => {
+        if (cameraRef) {
+            try {
+                const data = await cameraRef.current.takePictureAsync();
+                // console.log(data);
+                // setImage(data.uri);
+                // console.log('image: ', data.uri);
+                onClose(data.uri);
+            } catch (err) {
+                console.log(err);
+            };
+        }
+    }
+
+
 
     return (
         <View style={styles.container}>
-            <CameraView style={styles.camera} facing={facing}>
-                <TouchableOpacity onPress={toggleCameraFacing} />
-            </CameraView>
+            {!image ?
+                <CameraView 
+                    ref={cameraRef}
+                    style={styles.camera}
+                    facing={facing}
+                />
+                :
+                <Image source={{uri: image}} style={styles.image}/>
+            }
+            <Text style={styles.guideText}>영역 안에 신분증이 꽉 차도록{"\n"}배치 후 하단 버튼을 눌러 촬영해주세요</Text>
 
-            <View style={styles.guideTextContainer}>
-                <Text style={styles.guideText}>영역 안에 신분증이 꽉 차도록 배치 후 하단 버튼을 눌러 촬영해주세요</Text>
+            <View style={styles.shootContainer}>
+                <TouchableOpacity
+                    // onPress={() => setCamModalVisible(!camModalVisible)}
+                    onPress={takePicture}
+                >
+                    <Image source={photoShoot} />
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -49,24 +73,35 @@ export default function CameraModal() {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      width: '90%',
-      paddingVertical: 150,
+        flex: 1,
+        // justifyContent: 'center',
     },
     camera: {
         borderWidth: 20,
         borderColor: Colors.black,
         borderRadius: 10,
         overflow: 'hidden',
-        height: '80%',
+        width: 350,
+        height: 250,
+        marginTop: 100,
     },
-    guideTextContainer: {
-        padding: 20,
+    image: {
+        width: 300,
+        height: 160,
     },
     guideText: {
         fontSize: 18,
         color: Colors.white,
         textAlign: 'center',
-    }
-  });
+        marginTop: 50,
+    },
+
+
+    shootContainer: {
+        position: 'absolute',
+        bottom: 200,
+        alignSelf: 'center',
+        // marginBottom: 200,
+    },
+
+});

@@ -21,15 +21,16 @@ export default function CustomButton({ title, onPress, buttonColor }: CustomButt
 
 const styles = StyleSheet.create({
     button: {
-        borderRadius: 5,
+        borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
         height: 60,
-        width: 70,
+        width: 76,
         marginLeft: 10,
     },
     buttonText: {
         fontSize: 16,
+        fontWeight: '500',
         color: Colors.white,
     },
 });

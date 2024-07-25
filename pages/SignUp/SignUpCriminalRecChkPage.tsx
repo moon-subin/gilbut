@@ -16,6 +16,7 @@ export default function SignUpCriminalRecChkPage() {
     const navigation = useNavigation();
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
     const [attachedFile, setAttachedFile] = useState(null);
+    const [isChecked, setChecked] = useState(false);
 
     const authDoc = '범죄경력회보서';
     const DOCUMENTS_FOLDER = `${FileSystem.documentDirectory}${FOLDER_NAME}/`;
@@ -106,6 +107,18 @@ export default function SignUpCriminalRecChkPage() {
     };
 
     
+    const handleCheckboxChange = (checked) => {
+        setChecked(checked);
+        setIsNextButtonYellow(checked && attachedFile !== null); // Update button color based on checkbox and image state
+    };
+
+    const handleNextPage = () => {
+        if (isChecked && attachedFile) {
+            navigation.navigate('SignUpDocsFinPage');
+        } else {
+            // Alert.alert("Error", "Please capture an image and agree to the terms.");
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -122,8 +135,14 @@ export default function SignUpCriminalRecChkPage() {
 
                 <View style={styles.button}>
                     <Text style={styles.buttonText}>{authDoc}</Text>
-                    <TouchableOpacity onPress={selectFile}>
-                        <Image source={fileAttach} />
+                    <TouchableOpacity 
+                        onPress={selectFile} 
+                        style={[
+                            styles.attachTextContainer,
+                            {backgroundColor: (attachedFile? Colors.yellow : Colors.lightGray)}
+                        ]}
+                    >
+                        <Text style={styles.attachText}>첨부</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -135,7 +154,10 @@ export default function SignUpCriminalRecChkPage() {
                 )}
 
                 {/* 개인정보수집 체크박스 */}
-                <PrivacyTermCheckBox />
+                <PrivacyTermCheckBox
+                    isChecked={isChecked}
+                    onCheck={handleCheckboxChange}
+                />
             </View>
 
             <View style={styles.pageBtnContainer}>
@@ -147,7 +169,7 @@ export default function SignUpCriminalRecChkPage() {
                 />
                 <GoToPageButton
                     title="다음"
-                    onPress={() => navigation.navigate('SignUpDocsFinPage')}
+                    onPress={handleNextPage}
                     buttonColor={isNextButtonYellow ? Colors.darkYellow : Colors.lightGray}
                     style={{ width: '59%' }}
                 />
@@ -168,12 +190,12 @@ const styles = StyleSheet.create({
     },
     signUpTitle: {
         fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: 50,
+        fontWeight: '600',
+        marginTop: 100,
     },
     signUpContent: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '500',
         marginTop: 20,
         marginBottom: 30,
     },
@@ -197,16 +219,28 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 60,
         borderWidth: 2,
-        borderRadius: 5,
+        borderRadius: 8,
         borderColor: Colors.gray,
         paddingHorizontal: 20,
         paddingVertical: 10,
-        marginVertical: 5,
+        marginTop: 30,
     },
     buttonText: {
         fontSize: 18,
         fontWeight: 'bold',
     },
+    attachTextContainer: {
+        // backgroundColor: Colors.lightGray,
+        borderRadius: 18,
+        height: 30,
+        width: 54,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    attachText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },  
     selectedFileContainer: {
         marginTop: 20,
         alignItems: 'center',

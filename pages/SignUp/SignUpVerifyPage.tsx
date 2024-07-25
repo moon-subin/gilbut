@@ -19,6 +19,25 @@ export default function SignUpVerifyPage() {
         setIsNextButtonYellow(selectedOption !== null);
     }, [selectedOption]);
 
+    const getAuthCard = (option) => {
+        switch (option) {
+            case 'walfare':
+                return '복지카드';
+            case 'idCard':
+                return '신분증';
+            case 'driverLicense':
+                return '운전면허증';
+            default:
+                return '';
+        }
+    };
+
+    const handleNextPage = () => {
+        if (isNextButtonYellow) {
+            navigation.navigate('SignUpCamPage', {authCard: getAuthCard(selectedOption)});
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.content}>
@@ -67,7 +86,7 @@ export default function SignUpVerifyPage() {
             <View style={styles.pageBtnContainer}>
                 <GoToPageButton 
                     title="다음"
-                    onPress={() => navigation.navigate('SignUpCamPage')}
+                    onPress={handleNextPage}
                     buttonColor={isNextButtonYellow ? Colors.darkYellow : Colors.lightGray}
                     style={{width: '100%'}}>
                 </GoToPageButton>
@@ -87,18 +106,18 @@ const styles = StyleSheet.create({
     },
     signUpTitle: {
         fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: 50,
+        fontWeight: '600',
+        marginTop: 100,
     },
     signUpContent: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '500',
         marginTop: 20,
         marginBottom: 30,
     },
     idTitle: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '500',
         marginTop: 20,
         marginBottom: 10,
     },
@@ -109,7 +128,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 60,
         borderWidth: 2,
-        borderRadius: 5,
+        borderRadius: 8,
         borderColor: Colors.gray,
         paddingHorizontal: 20,
         paddingVertical: 10,
@@ -119,8 +138,8 @@ const styles = StyleSheet.create({
         borderColor: Colors.darkYellow,
     },
     buttonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 20,
+        fontWeight: '500',
     },
     icon: {
         width: 24,

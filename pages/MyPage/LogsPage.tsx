@@ -16,7 +16,7 @@ export default function Logs() {
         <View>
             <Header
                 title="기록"
-                naviPage='TabThreeScreen'></Header>
+                naviPage='ProfilePage'></Header>
             <View style={{backgroundColor: Colors.headerBg}}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.logContainer}>

@@ -11,11 +11,11 @@ import ClientLocationMarker from '@/components/Map/ClientLocationMarker';
 // import NaverMapView from '../../components/Map/index';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import Voice from 'react-native-voice';
+// import Voice from 'react-native-voice';
 import { SpeechClient } from '@google-cloud/speech';
 import { GOOGLEMAP_KEY } from '@env';
-import speechToText from '@/utils/speechToText';
 
+// import { voiceRecognition } from '@/utils/voiceRecognition';
 
 import { Colors } from '@/constants/Colors';
 import { SearchBar } from 'react-native-screens';
@@ -59,7 +59,6 @@ export default function MainPageDisabled() {
             Alert.alert('Location not available');
         }
     };
-
     
     return (
       <View style={styles.container}>

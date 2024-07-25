@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Pressable, Image, Modal, Alert } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { useNavigation } from '@react-navigation/native';
-import Checkbox from 'expo-checkbox';
-
+import { useNavigation, useRoute } from '@react-navigation/native';
+import PrivacyTermCheckBox from '../../components/PrivacyTermCheckBox';
 import GoToPageButton from '../../components/GoToPageButton';
 import CameraModal from '../../components/CameraModal';
-import PrivacyTermCheckBox from '../../components/PrivacyTermCheckBox';
 
-const photoShoot = require('../../assets/images/photoShoot.png');
 const addCircle = require('../../assets/images/add-circle.png');
 
 export default function SignUpCamPage() {
+    const route = useRoute();
     const navigation = useNavigation();
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
     const [isChecked, setChecked] = useState(false);
     const [camModalVisible, setCamModalVisible] = useState(false);
+    const [capturedImage, setCapturedImage] = useState(null);
 
-    const authCard = '운전면허증';
+    const authCard = route.params.authCard;
+
+    const handleModalClose = (imageUri) => {
+        setCapturedImage(imageUri); // Update state with the captured image URI
+        setCamModalVisible(false); // Close the modal
+    };
+
+    const handleCheckboxChange = (checked) => {
+        setChecked(checked);
+        setIsNextButtonYellow(checked && capturedImage !== null); // Update button color based on checkbox and image state
+    };
+
+    const handleNextPage = () => {
+        if (isChecked && capturedImage) {
+            navigation.navigate('SignUpCriminalRecChkPage', { authCardImage: capturedImage });
+        } else {
+            // Alert.alert("Error", "Please capture an image and agree to the terms.");
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -33,34 +50,27 @@ export default function SignUpCamPage() {
                         setCamModalVisible(!camModalVisible);
                     }}>
                     <View style={styles.modalView}>
-                        <CameraModal />
-                        <View style={styles.shootContainer}>
-                            <Pressable
-                                style={[styles.button, styles.buttonClose]}
-                                onPress={() => setCamModalVisible(!camModalVisible)}>
-                                <Image source={photoShoot} style={styles.shootStyle} />
-                            </Pressable>
-                        </View>
+                        <CameraModal onClose={handleModalClose} />
                     </View>
                 </Modal>
-                {/* <Pressable
-                    style={[styles.button, styles.buttonOpen]}
-                    onPress={() => setCamModalVisible(true)}>
-                    <Text style={styles.textStyle}>이곳을 눌러 신분증을 촬영해주세요</Text>
-                </Pressable> */}
-                <View style={styles.cameraBtnContainer}>
-                    <Pressable
-                        style={({ pressed }) => styles.cameraButton}
-                        onPress={() => setCamModalVisible(true)}
-                    >
-                        <View style={styles.buttonContent}>
-                            <Image source={addCircle} style={styles.plusIcon} />
-                            <Text style={styles.buttonText}>이곳을 눌러 신분증을 촬영해주세요</Text>
-                        </View>
-                    </Pressable>
-                </View>
-                
-                <PrivacyTermCheckBox />
+
+                <Pressable
+                    style={({ pressed }) => styles.cameraButton}
+                    onPress={() => setCamModalVisible(true)}
+                >
+                    <View style={styles.buttonContent}>
+                        <Image source={addCircle} style={styles.plusIcon} />
+                        <Text style={styles.buttonText}>이곳을 눌러 신분증을 촬영해주세요</Text>
+                    </View>
+                    {capturedImage && (
+                        <Image source={{ uri: capturedImage }} style={styles.capturedImage} />
+                    )}
+                </Pressable>
+
+                <PrivacyTermCheckBox
+                    isChecked={isChecked}
+                    onCheck={handleCheckboxChange}
+                />
             </View>
 
             <View style={styles.pageBtnContainer}>
@@ -72,7 +82,7 @@ export default function SignUpCamPage() {
                 />
                 <GoToPageButton
                     title="다음"
-                    onPress={() => navigation.navigate('SignUpCriminalRecChkPage')}
+                    onPress={handleNextPage}
                     buttonColor={isNextButtonYellow ? Colors.darkYellow : Colors.lightGray}
                     style={{ width: '59%' }}
                 />
@@ -93,8 +103,8 @@ const styles = StyleSheet.create({
     },
     signUpTitle: {
         fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: 50,
+        fontWeight: '600',
+        marginTop: 100,
     },
     modalView: {
         backgroundColor: Colors.gray_modalBg,
@@ -119,21 +129,16 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
     },
-
-    cameraBtnContainer: {
-        height: '100%',
-        alignItems: 'center',
-        paddingVertical: '50%',
-    },
     cameraButton: {
-        width: '90%',
-        height: '50%',
+        width: 350,
+        height: 200,
         backgroundColor: Colors.white,
-        borderRadius: 10,
-        borderWidth: 5,
+        borderRadius: 16,
+        borderWidth: 2,
         borderColor: Colors.lightGray,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 100,
     },
     buttonContent: {
         alignItems: 'center',
@@ -146,12 +151,14 @@ const styles = StyleSheet.create({
     buttonText: {
         color: Colors.gray,
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '400',
     },
-
-    shootContainer: {
-        alignItems: 'center',
-        marginBottom: 200,
+    capturedImage: {
+        position: 'absolute',
+        width: 350,
+        height: 200,
+        borderRadius: 16,
+        marginTop: 20,
+        alignSelf: 'center',
     },
-    shootStyle: {},
 });

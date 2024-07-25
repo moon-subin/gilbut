@@ -39,7 +39,7 @@ export default function CurrHelpTimePage() {
         <View>
             <Header
                 title="현재 도움 시간"
-                naviPage='TabThreeScreen'></Header>
+                naviPage='ProfilePage'></Header>
             <View style={styles.container}>
                 <View style={styles.circularBar}>
                     <AnimatedCircularProgress

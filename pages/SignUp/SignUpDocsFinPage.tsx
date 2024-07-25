@@ -33,8 +33,8 @@ export default function SignUpDocsFinPage() {
             </View>
             <View style={styles.pageBtnContainer}>
                 <GoToPageButton 
-                    title="회원정보입력"
-                    onPress={() => navigation.navigate('SignUpInputPage')}
+                    title="프로필 설정"
+                    onPress={() => navigation.navigate('SignUpSetProfile')}
                     buttonColor={Colors.darkYellow}
                     style={{width: '100%'}}>
                 </GoToPageButton>
