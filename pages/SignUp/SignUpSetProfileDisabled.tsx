@@ -12,13 +12,16 @@ import cityList from '@/assets/datas/cityList';
 const user = require('../../assets/images/user.png');
 const addProfile = require('../../assets/images/addProfile.png');
 
-export default function SignUpSetProfile() {
+export default function SignUpSetProfileDisabled() {
     const navigation = useNavigation(); 
     const [profileImage, setProfileImage] = useState(null); 
-    const [listVisible, setListVisible] = useState(false);
+    const [cityListVisible, setCityListVisible] = useState(false);
+    const [visionListVisible, setVisionListVisible] = useState(false);
     const [selectedCity, setSelectedCity] = useState(null);
     const [selectedSubArea, setSelectedSubArea] = useState(null);
-    const [inputValue, setInputValue] = useState(''); // State for input field
+    const [selectedVision, setSelectedVision] = useState(null);
+    const [inputCityValue, setInputCityValue] = useState(''); // State for input field
+    const [inputVisionValue, setInputVisionValue] = useState(''); // State for input field
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -42,24 +45,31 @@ export default function SignUpSetProfile() {
         setSelectedSubArea(subArea);
     }
 
+    const handleVisionSelect = (vision) => {
+        setSelectedVision(vision);
+    }
+
     useEffect(() => {
         if (selectedCity && selectedSubArea) {
-            setInputValue(`${selectedCity.name} ${selectedSubArea}`);
+            setInputCityValue(`${selectedCity.name} ${selectedSubArea}`);
         } else if (selectedCity) {
-            setInputValue(selectedCity.name); // Show city name if sub-area is not selected
+            setInputCityValue(selectedCity.name); // Show city name if sub-area is not selected
         } else {
-            setInputValue('');
+            setInputCityValue('');
         }
     }, [selectedCity, selectedSubArea]);
 
+    useEffect(() => {
+        if (selectedVision) {
+            setInputVisionValue(selectedVision);
+        } else {
+            setInputVisionValue('');
+        }
+    }, [selectedVision]);
+
     const isCitySelected = (city) => city === selectedCity;
     const isSubAreaSelected = (subArea) => subArea === selectedSubArea;
-
-    const handleStartButton = () => {
-        navigation.navigate('(tabs)');
-
-        // if ~~ 입력 완료되면
-    };
+    const isVisionSelected = (vision) => vision === selectedVision;
 
     return (
         <View style={styles.container}>
@@ -106,23 +116,23 @@ export default function SignUpSetProfile() {
                             <TextInput 
                                 style={styles.input} 
                                 placeholder="주요 활동 반경"  
-                                value={inputValue} // Bind the input value
-                                onChangeText={text => setInputValue(text)} // Handle text change
+                                value={inputCityValue} // Bind the input value
+                                onChangeText={text => setInputCityValue(text)} // Handle text change
                                 editable={false}
                             />
                             <TouchableOpacity 
-                                onPress={() => setListVisible(!listVisible)} 
+                                onPress={() => setCityListVisible(!cityListVisible)} 
                                 style={styles.iconContainer}
                             >
                                 <Ionicons 
-                                    name={listVisible ? "chevron-up-outline" : "chevron-down-outline"} 
+                                    name={cityListVisible ? "chevron-up-outline" : "chevron-down-outline"} 
                                     color={Colors.white} 
                                     size={15} 
                                 />
                             </TouchableOpacity>
                         </View>
                         {/* 토글 아이콘 클릭 시 도시 목록 보여짐 */}
-                        {listVisible && (
+                        {cityListVisible && (
                             <View style={styles.cityListContainer}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{width:'50%'}}>
                                     <FlatList
@@ -131,15 +141,15 @@ export default function SignUpSetProfile() {
                                         renderItem={({ item }) => (
                                             <TouchableOpacity 
                                                 style={[
-                                                    styles.cityItem, 
+                                                    styles.item, 
                                                     isCitySelected(item) && styles.selectedItem
                                                 ]}
                                                 onPress={() => handleCitySelect(item)}
                                             >
-                                                <Text style={styles.cityName}>{item.name}</Text>
+                                                <Text style={styles.name}>{item.name}</Text>
                                             </TouchableOpacity>
                                         )}
-                                        style={styles.cityList}
+                                        style={styles.list}
                                     />
                                 </ScrollView>
                                 <View style={styles.verticalLine} />
@@ -150,15 +160,15 @@ export default function SignUpSetProfile() {
                                         renderItem={({ item }) => (
                                             <TouchableOpacity 
                                                 style={[
-                                                    styles.subAreaItem, 
+                                                    styles.item, 
                                                     isSubAreaSelected(item) && styles.selectedItem
                                                 ]}
                                                 onPress={() => handleSubAreaSelect(item)}
                                             >
-                                                <Text style={styles.subAreaName}>{item}</Text>
+                                                <Text style={styles.name}>{item}</Text>
                                             </TouchableOpacity>
                                         )}
-                                        style={styles.subAreaList}
+                                        style={styles.list}
                                     />
                                 </ScrollView>
                             </View>
@@ -166,11 +176,45 @@ export default function SignUpSetProfile() {
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <Text style={styles.inputTitle}>1365/VMS 계정 (선택)</Text>
-                        <TextInput 
-                            style={styles.input} 
-                            placeholder="계정"
-                        />
+                        <Text style={styles.inputTitle}>시력 정도</Text>
+                        <View style={styles.inputWithIcon}>
+                            <TextInput 
+                                style={styles.input} 
+                                placeholder="시력 정도"
+                                editable={false}
+                                onChangeText={text => setInputVisionValue(text)} // Handle text change
+                            />
+                            <TouchableOpacity 
+                                onPress={() => setVisionListVisible(!visionListVisible)} 
+                                style={styles.iconContainer}
+                            >
+                                <Ionicons 
+                                    name={visionListVisible ? "chevron-up-outline" : "chevron-down-outline"} 
+                                    color={Colors.white} 
+                                    size={15} 
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        {visionListVisible && (
+                            <ScrollView showsVerticalScrollIndicator={false}>
+                                <FlatList
+                                    data={['전맹', '맹', '준맹', '저시력']}
+                                    keyExtractor={(item) => item}
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity 
+                                            style={[
+                                                styles.item, 
+                                                isVisionSelected(item) && styles.selectedItem
+                                            ]}
+                                            onPress={() => handleVisionSelect(item)}
+                                        >
+                                            <Text style={styles.name}>{item}</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                    style={styles.visionContainer}
+                                />
+                            </ScrollView>
+                        )}
                     </View>
                 </ScrollView>
             </View>
@@ -178,7 +222,7 @@ export default function SignUpSetProfile() {
             <View style={styles.pageBtnContainer}>
                 <GoToPageButton 
                     title="길벗 시작하기"
-                    onPress={handleStartButton}
+                    onPress={() => navigation.navigate('SignUpSetProfile')}
                     buttonColor={Colors.darkYellow}
                     style={{ width: '100%' }}
                 />
@@ -300,30 +344,26 @@ const styles = StyleSheet.create({
         marginTop: 10,
         position: 'relative',
     },
-    cityList: {
+    list: {
         flex: 1,
         // marginRight: 1,
     },
-    cityItem: {
+    item: {
         padding: 10,
     },
     selectedItem: {
         backgroundColor: 'rgba(255, 219, 125, 1)',
     },
-    cityName: {
+    name: {
         fontSize: 16,
         fontWeight: '500',
     },
-    subAreaList: {
-        flex: 1,
-        // marginLeft: 1,
-    },
-    subAreaItem: {
-        padding: 10,
-    },
-    subAreaName: {
-        fontSize: 16,
-        fontWeight: '500',
+    visionContainer: {
+        borderWidth: 2,
+        borderRadius: 8,
+        borderColor: Colors.yellow,
+        height: 150,
+        marginTop: 10,
     },
     pageBtnContainer: {
         position: 'absolute',

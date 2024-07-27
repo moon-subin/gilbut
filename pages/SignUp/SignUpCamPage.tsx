@@ -29,6 +29,8 @@ export default function SignUpCamPage() {
     };
 
     const handleNextPage = () => {
+        navigation.navigate('SignUpCriminalRecChkPage', { authCardImage: capturedImage });
+
         if (isChecked && capturedImage) {
             navigation.navigate('SignUpCriminalRecChkPage', { authCardImage: capturedImage });
         } else {

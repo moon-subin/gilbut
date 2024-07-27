@@ -41,7 +41,7 @@ export default function SignUpCriminalRecChkPage() {
                 // uploadFile(selectedFile);
                 // saveFile(selectedFile);
                 Alert.alert('파일 선택 성공')
-                console.log('파일 선택 성공 result: ', selectedFile);
+                // console.log('파일 선택 성공 result: ', selectedFile);
             } else {
                 Alert.alert('Document picking cancelled')
                 console.log('Document picking cancelled');
@@ -113,6 +113,8 @@ export default function SignUpCriminalRecChkPage() {
     };
 
     const handleNextPage = () => {
+        navigation.navigate('SignUpDocsFinPage');
+
         if (isChecked && attachedFile) {
             navigation.navigate('SignUpDocsFinPage');
         } else {

@@ -8,11 +8,12 @@ import SignUpCriminalRecChkPage from '@/pages/SignUp/SignUpCriminalRecChkPage';
 import SignUpDocsFinPage from '@/pages/SignUp/SignUpDocsFinPage';
 import SignUpFinPage from '@/pages/SignUp/SignUpFinPage';
 import SignUpSetProfile from '@/pages/SignUp/SignUpSetProfile';
+import SignUpSetProfileDisabled from '@/pages/SignUp/SignUpSetProfileDisabled';
 
 const Stack = createNativeStackNavigator();
 
 export const unstable_settings = {
-    initialRouteName: 'SignUpVerifyPage',
+    initialRouteName: 'SignUpInputPage',
 };
 
 export default function SignUp() {
@@ -27,6 +28,7 @@ export default function SignUp() {
             <Stack.Screen name="SignUpDocsFinPage" component={SignUpDocsFinPage} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpFinPage" component={SignUpFinPage} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpSetProfile" component={SignUpSetProfile} options={{ headerShown: false }} />
-        </Stack.Navigator>
+            <Stack.Screen name="SignUpSetProfileDisabled" component={SignUpSetProfileDisabled} options={{ headerShown: false }} />
+      </Stack.Navigator>
     );
 }

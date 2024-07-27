@@ -1,22 +1,16 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform, Dimensions } from 'react-native';
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import { UserLocationContext } from '@/Context/UserLocationContext';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Platform, Dimensions, Image } from 'react-native';
+import MapView, { Marker, Polyline, Callout } from 'react-native-maps';
 import { useRoute } from '@react-navigation/native'; 
-import { GooglePlaceDetail, GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import MapViewDirections from "react-native-maps-directions";
-import Constants from "expo-constants";
-import axios from 'axios';
-
 import getWalkingRoute from '@/utils/getWalkingRoute';
-
 import { Colors } from '@/constants/Colors';
 import RouteInfoView from '@/components/Map/RouteInfoView';
 import ConfirmedArrivalModal from '@/components/Map/ConfirmedArrivalModal';
-import { GOOGLEMAP_KEY, TMAP_KEY } from '@env';
 
 const routeCircleMarker = require('../../assets/images/routeCircleMarker.png');
 
+// Example profile images
+const kittyProfile = require('../../assets/images/kittyProfile.png');
 
 const { width, height } = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
@@ -24,32 +18,23 @@ const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function PathToRequesterMap() {
-    // const { location } = useContext(UserLocationContext);
     const route = useRoute();
-
-    // console.log(route.params.request);
     const selectedRequest = route.params.request;
     const myLocation = route.params.region;
 
-    // const [mapRegion, setmapRegion] = useState(null);
     const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
-
-    // 1: 의뢰자에게 가는 중, 2: 의뢰자와 목적지로 가는 중
-    const [phase, setPhase] = useState(1); 
-
+    const [phase, setPhase] = useState(1);
     const [mapRegion, setMapRegion] = useState({
         latitude: myLocation.latitude,
         longitude: myLocation.longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
     });
-
     const [distance, setDistance] = useState(0);
     const [time, setTime] = useState(0);
     const [routeCoords, setRouteCoords] = useState([]);
     const mapRef = useRef<MapView>(null);
-
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     useEffect(() => {
@@ -76,7 +61,6 @@ export default function PathToRequesterMap() {
         }
     }, [phase, selectedRequest]);
 
-
     useEffect(() => {
         const fetchRoute = async () => {
             if (origin && destination) {
@@ -90,7 +74,6 @@ export default function PathToRequesterMap() {
         };
         fetchRoute();
     }, [origin, destination]);
-
 
     const drawRoute = (features) => {
         const coords = [];
@@ -113,8 +96,6 @@ export default function PathToRequesterMap() {
         if (phase === 1) {
             setPhase(2);
         } else {
-            // 목적지에 도착했을 때의 로직 추가
-            // 도착 확정 요청 모달
             setShowConfirmModal(true);
         }
     };      
@@ -142,8 +123,22 @@ export default function PathToRequesterMap() {
                 ref={mapRef}
             >
 
-                {origin && <Marker coordinate={origin} image={routeCircleMarker} />}
-                {destination && <Marker coordinate={destination} image={routeCircleMarker} />}
+                {origin && 
+                    <Marker coordinate={origin} image={routeCircleMarker}>
+                            <View style={styles.calloutContainer}>
+                                <Image source={kittyProfile} style={styles.profilePic} />
+                                <Text style={styles.markerText}>내 위치</Text>
+                            </View>
+                    </Marker>
+                }
+                {destination && 
+                    <Marker coordinate={destination} image={routeCircleMarker}>
+                            <View style={styles.calloutContainer}>
+                                <Image source={kittyProfile} style={styles.profilePic} />
+                                <Text style={styles.markerText}>의뢰자 위치</Text>
+                            </View>
+                    </Marker>
+                }
                 {routeCoords.length > 0 && 
                     <Polyline 
                         coordinates={routeCoords}
@@ -160,7 +155,7 @@ export default function PathToRequesterMap() {
             <ConfirmedArrivalModal
                 visible={showConfirmModal}
                 onConfirm={handleRequestConfirm}
-                onCencel={handleCancel}
+                onCancel={handleCancel}
                 placeName={selectedRequest.requestPlace.name}
                 clientName={selectedRequest.clientName}
             />
@@ -175,14 +170,25 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
     },
-    infoContainer: {
+    calloutContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 60,
+        height: 50,
         position: 'absolute',
-        zIndex: 20,
-        backgroundColor: Colors.white,
-        width: "100%",
-        height: 250,
-        paddingTop: 60,
-        paddingHorizontal: 20,
+        bottom: 20,
+    },
+    profilePic: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginBottom: 5,
+    },
+    markerText: {
+        backgroundColor: Colors.yellow,
+        fontWeight: '700',
+        fontSize: 10,
+        padding: 5,
     },
     arrivalBtnContainer: {
         position: 'absolute',

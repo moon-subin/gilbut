@@ -34,7 +34,7 @@ export default function SignUpDocsFinPage() {
             <View style={styles.pageBtnContainer}>
                 <GoToPageButton 
                     title="프로필 설정"
-                    onPress={() => navigation.navigate('SignUpSetProfile')}
+                    onPress={() => navigation.navigate('SignUpSetProfileDisabled')}
                     buttonColor={Colors.darkYellow}
                     style={{width: '100%'}}>
                 </GoToPageButton>
