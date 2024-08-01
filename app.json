@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "",
+      "bundleIdentifier": "com.gilbutteam.gilbut",
       "infoPlist": {
         "UIBackgroundModes": [
           "location",
@@ -51,6 +51,11 @@
       "expo-localization",
       "expo-background-fetch",
       [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+          "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
+        },
         "expo-build-properties",
         {
           "android": {
@@ -115,7 +120,11 @@
             "extraMavenRepos": ["https://repository.map.naver.com/archive/maven"]
           }
         }
-      ]
+      ],
+      "expo-av",
+      {
+        "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+      }
     ],
     "experiments": {
       "typedRoutes": true
@@ -124,7 +133,10 @@
       "router": {
         "origin": false
       },
-      "naverMapApiKey": "${process.env.NAVERMAP_KEY}"
+      "naverMapApiKey": "${process.env.NAVERMAP_KEY}",
+      "eas": {
+        "projectId": ""
+      }
     }
   }
 }

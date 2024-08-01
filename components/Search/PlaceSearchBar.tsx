@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 
 const micIcon = require('../../assets/images/mic.png');
 
-export default function PlaceSearchBar({placeholder}) {
+export default function PlaceSearchBar({placeholder, handleMicButton}) {
     const [searchInput, setSearchInput]=useState();
 
     return (
@@ -15,7 +15,7 @@ export default function PlaceSearchBar({placeholder}) {
                     onChangeText={(value) => setSearchInput(value)}
                     // onSubmitEditing={() => setSearchText(searchInput)}
                 />
-                <TouchableOpacity style={styles.micBtn}>
+                <TouchableOpacity style={styles.micBtn} onPress={handleMicButton}>
                     <Image source={micIcon} />
                 </TouchableOpacity>
             </View>
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius: 8,
         height: 60,
-        width: 280,
+        // width: '75%',
         ...Platform.select({
             ios: {
                 shadowColor: '#000',

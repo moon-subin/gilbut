@@ -35,8 +35,8 @@ export default function HomePage() {
     return (
         <UserLocationContext.Provider value={{ location, setLocation }}>
             <Stack.Navigator>
-                <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
-                {/* <Stack.Screen name="MainPageDisabled" component={MainPageDisabled} options={{ headerShown: false }} /> */}
+                {/* <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} /> */}
+                <Stack.Screen name="MainPageDisabled" component={MainPageDisabled} options={{ headerShown: false }} />
                 <Stack.Screen name="RequestLetter" component={RequestLetter} options={{ headerShown: false }} />
                 <Stack.Screen name="TabTwoScreen" component={TabTwoScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
