@@ -93,7 +93,7 @@ export default function MainPageDisabled() {
 
     const goRequestLetter = () => {
         if (location) {
-            navigation.navigate('RequestLetter', {
+            navigation.navigate('RequestLetterPage', {
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
             });

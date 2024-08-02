@@ -22,6 +22,11 @@ export default function TabLayout() {
           tabBarStyle: {
             borderTopWidth: 0, // 탭 바 위쪽 테두리 제거
             height: '12%', // 탭 바 높이 조정
+            shadowColor: '#000', // 그림자 색상
+            shadowOffset: { width: 0, height: -10 }, // 그림자 오프셋
+            shadowOpacity: 0.1, // 그림자 불투명도
+            shadowRadius: 10, // 그림자 반경
+            elevation: 5, // Android 그림자 효과
           },
           tabBarLabelStyle: {
             fontSize: 12,

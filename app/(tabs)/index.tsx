@@ -5,7 +5,8 @@ import * as Location from 'expo-location';
 import HomeScreen from '@/pages/Home/MainPage';
 import PathToRequesterMap from '@/pages/Matching/PathToRequesterMap';
 import MainPageDisabled from '@/pages/Home/MainPageDisabled';
-import RequestLetter from '@/pages/Home/RequestLetter';
+import RequestLetterPage from '@/pages/Home/RequestLetterPage';
+import PaymentPage from '@/pages/Matching/PaymentPage';
 import TabTwoScreen from './matching';
 import { UserLocationContext } from '@/Context/UserLocationContext';
 
@@ -37,7 +38,8 @@ export default function HomePage() {
             <Stack.Navigator>
                 {/* <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} /> */}
                 <Stack.Screen name="MainPageDisabled" component={MainPageDisabled} options={{ headerShown: false }} />
-                <Stack.Screen name="RequestLetter" component={RequestLetter} options={{ headerShown: false }} />
+                <Stack.Screen name="RequestLetterPage" component={RequestLetterPage} options={{ headerShown: false }} />
+                <Stack.Screen name="PaymentPage" component={PaymentPage} options={{ headerShown: false }} />
                 <Stack.Screen name="TabTwoScreen" component={TabTwoScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
         </UserLocationContext.Provider>

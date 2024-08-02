@@ -73,15 +73,18 @@ const Item = ({name, color, borderColor}: ItemProps) => (
     </View>
   );
 
-export default function RequestLetter() {
+export default function RequestLetterPage() {
     const navigation = useNavigation();
     const route = useRoute();
     const [address, setAddress] = useState('');
+    const [destAddress, setDestAddreess] = useState('');
+    const [destName, setDestName] = useState('');
     const [micModalVisible, setMicModalVisible] = useState(false);
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
 
     const lat = route.params.latitude;
     const lng = route.params.longitude;
+
 
     useEffect(() => {
         async function fetchAddress() {
@@ -105,15 +108,32 @@ export default function RequestLetter() {
         setMicModalVisible(true);
     };
 
+    const estimatedPaymentAmount = 1950;
+    const time = 17;
+
     const handleNextPage = () => {
-        navigation.navigate('RequestLetter');
+        navigation.navigate('matching', { 
+            screen: 'PaymentPage', 
+            params: { 
+                origin: address,
+                destName: destName,
+                time: time,
+                amount: estimatedPaymentAmount,
+            }
+        });
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            const address = '이화여자대학교';
-            const data = await findPlace(address);
-            // console.log('data: ', data);
+            const searchKeyword = '이화여자대학교';
+            const findedplace = await findPlace(searchKeyword);
+            setDestAddreess(findedplace.candidates[0].formatted_address);
+            setDestName(findedplace.candidates[0].name);
+            
+            // console.log('data: ', findedplace);
+            // console.log('data: ', findedplace.candidates[0].name);
+            // console.log('destName: ', destName);
+            // console.log('destAddress: ', destAddress);
         };
     
         fetchData();
@@ -128,6 +148,7 @@ export default function RequestLetter() {
                     <Ionicons name="swap-vertical-outline" color={Colors.gray} size={28} style={styles.swap} />
                     <View style={styles.searchBarContainer}>
                         <PlaceSearchBar placeholder={address} handleMicButton={handleMicButton} />
+                        <View style={{paddingVertical:5}}/>
                         <PlaceSearchBar placeholder="도착지 입력" handleMicButton={handleMicButton} />
                     </View>
                 </View>
@@ -194,7 +215,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.headerBg,
         height: '100%',
-        padding: 20,
+        paddingHorizontal: 20,
     },
     searchContainer: {
         flexDirection: 'row',
