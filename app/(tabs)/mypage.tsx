@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ProfilePage from '../../pages/MyPage/ProfilePage';
 import Logs from '@/pages/MyPage/LogsPage';
 import CurrHelpTimePage from '@/pages/MyPage/CurrHelpTimePage';
+import LevelRewardGuidePage from '@/pages/MyPage/LevelRewardGuidePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +16,7 @@ export default function TabThreeScreen() {
             <Stack.Screen name="ProfilePage" component={ProfilePage} options={{ headerShown: false }} />
             <Stack.Screen name="Logs" component={Logs} options={{ headerShown: false }} />
             <Stack.Screen name="CurrHelpTimePage" component={CurrHelpTimePage} options={{ headerShown: false }} />
+            <Stack.Screen name="LevelRewardGuidePage" component={LevelRewardGuidePage} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }

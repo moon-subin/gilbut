@@ -10,59 +10,24 @@ import reverseGeocoding from '@/utils/reverseGeocoding';
 import findPlace from '@/utils/findPlace';
 import VoiceSearchPlaceModal from '@/components/Map/VoiceSearchPlaceModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import geocoding from '@/utils/geocoding';
 
 const bookmarkPlaces = [
-    {
-        id: '1',
-        name: 'First Item',
-    },
-    {
-        id: '2',
-        name: 'Second Item',
-    },
-    {
-        id: '3',
-        name: 'Third Item',
-    },
-    {
-        id: '4',
-        name: '4 Item',
-    },
-    {
-        id: '5',
-        name: '5 Item',
-    },
-    {
-        id: '6',
-        name: '',
-    },
+    { id: '1', name: 'First Item' },
+    { id: '2', name: 'Second Item' },
+    { id: '3', name: 'Third Item' },
+    { id: '4', name: '4 Item' },
+    { id: '5', name: '5 Item' },
+    { id: '6', name: '' },
 ];
 
 const recentPlaces = [
-    {
-        id: '1',
-        name: 'First Item',
-    },
-    {
-        id: '2',
-        name: 'Second Item',
-    },
-    {
-        id: '3',
-        name: 'Third Item',
-    },
-    {
-        id: '4',
-        name: '4 Item',
-    },
-    {
-        id: '5',
-        name: '5 Item',
-    },
-    {
-        id: '6',
-        name: '',
-    },
+    { id: '1', name: 'First Item' },
+    { id: '2', name: 'Second Item' },
+    { id: '3', name: 'Third Item' },
+    { id: '4', name: '4 Item' },
+    { id: '5', name: '5 Item' },
+    { id: '6', name: '' },
 ];
 
 type ItemProps = {name: string, color: string, borderColor: string};
@@ -77,8 +42,7 @@ export default function RequestLetterPage() {
     const navigation = useNavigation();
     const route = useRoute();
     const [address, setAddress] = useState('');
-    const [destAddress, setDestAddreess] = useState('');
-    const [destName, setDestName] = useState('');
+    const [destination, setDestination] = useState({ name: '', address: '', location: { lat: 0, lng: 0 } });
     const [micModalVisible, setMicModalVisible] = useState(false);
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
 
@@ -115,8 +79,8 @@ export default function RequestLetterPage() {
         navigation.navigate('matching', { 
             screen: 'PaymentPage', 
             params: { 
-                origin: address,
-                destName: destName,
+                origin: { address, lat, lng },
+                destination: destination,
                 time: time,
                 amount: estimatedPaymentAmount,
             }
@@ -125,15 +89,23 @@ export default function RequestLetterPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const searchKeyword = '이화여자대학교';
-            const findedplace = await findPlace(searchKeyword);
-            setDestAddreess(findedplace.candidates[0].formatted_address);
-            setDestName(findedplace.candidates[0].name);
-            
-            // console.log('data: ', findedplace);
-            // console.log('data: ', findedplace.candidates[0].name);
-            // console.log('destName: ', destName);
-            // console.log('destAddress: ', destAddress);
+            try {
+                const searchKeyword = '남녕고';
+                const findedPlace = await findPlace(searchKeyword);
+                const placeLocation = await geocoding(findedPlace.candidates[0].formatted_address);
+                // console.log('placeLocation: ', placeLocation);
+                setDestination({
+                    name: findedPlace.candidates[0].name,
+                    address: findedPlace.candidates[0].formatted_address,
+                    location: {
+                        lat: placeLocation.lat,
+                        lng: placeLocation.lng,
+                    }
+                });
+                console.log(destination);
+            } catch (error) {
+                Alert.alert('Error', 'Failed to fetch destination place');
+            }
         };
     
         fetchData();

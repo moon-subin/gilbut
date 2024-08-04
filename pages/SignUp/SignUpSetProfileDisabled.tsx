@@ -152,7 +152,7 @@ export default function SignUpSetProfileDisabled() {
                                         style={styles.list}
                                     />
                                 </ScrollView>
-                                <View style={styles.verticalLine} />
+                            <View style={styles.verticalLine} />
                                 <ScrollView showsVerticalScrollIndicator={false} style={{width:'50%'}}>
                                     <FlatList
                                         data={selectedCity ? selectedCity.subArea : []}

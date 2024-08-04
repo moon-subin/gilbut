@@ -11,7 +11,7 @@ export default function PaymentPage() {
     const route = useRoute();
 
     const origin = route.params.origin;
-    const destName = route.params.destName;
+    const destination = route.params.destination;
     const time = route.params.time;
     const amount = route.params.amount;
     // console.log(origin);
@@ -22,7 +22,7 @@ export default function PaymentPage() {
     const handleNextPage = () => {
         navigation.navigate('WaitingMatchingPage', { 
             origin: origin,
-            destName: destName,
+            destination: destination,
             time: time,
             amount: amount,
         });

@@ -14,7 +14,7 @@ export default function WaitingMatchingPage() {
     const [isMatchingSuccess, setIsMatchingSuccess] = useState(false);
 
     const origin = route.params.origin;
-    const destName = route.params.destName;
+    const destination = route.params.destination;
     const time = route.params.time;
     const amount = route.params.amount;
     // console.log(origin);
@@ -41,7 +41,12 @@ export default function WaitingMatchingPage() {
 
     useEffect(() => {
         if (isMatchingSuccess) {
-            navigation.navigate('MatchingSuccessPage');
+            navigation.navigate('MatchingSuccessPage', { 
+                origin: origin,
+                destination: destination,
+                time: time,
+                amount: amount,
+            });
         }
     }, [isMatchingSuccess]);
 
@@ -56,8 +61,8 @@ export default function WaitingMatchingPage() {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.text}><Text style={styles.infoText}>{origin}</Text> 에서</Text>
-                <Text style={styles.text}><Text style={styles.infoText}>{destName}</Text> 까지</Text>
+                <Text style={styles.text}><Text style={styles.infoText}>{origin.address}</Text> 에서</Text>
+                <Text style={styles.text}><Text style={styles.infoText}>{destination.name}</Text> 까지</Text>
                 <Text style={styles.text}>총 소요 시간 <Text style={styles.infoText}>{time}분</Text></Text>
                 <Text style={styles.text}>예상 금액 <Text style={styles.infoText}>{amount}원</Text></Text>
             </View>
@@ -89,7 +94,7 @@ const styles = StyleSheet.create({
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 10 },
                 shadowOpacity: 0.1,
-                shadowRadius: 10,
+                shadowRadius: 5,
             },
             android: {
                 elevation: 5,

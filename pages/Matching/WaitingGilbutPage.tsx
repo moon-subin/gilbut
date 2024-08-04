@@ -12,6 +12,11 @@ export default function WaitingMatchingPage() {
     const navigation = useNavigation();
     const route = useRoute();
 
+    const origin = route.params.origin;
+    const destination = route.params.destination;
+    const time = route.params.time;
+    const amount = route.params.amount;
+
     const [expanded, setExpanded] = useState(false);
     const [leftTime, setLeftTime] = useState(5);
     const [isGilbutArrived, setIsGilbutArrived] = useState(false);
@@ -46,15 +51,27 @@ export default function WaitingMatchingPage() {
 
     useEffect(() => {
         if (isGilbutArrived) {
-            navigation.navigate('PathToDestinationMap'); 
+            navigation.navigate('PathToDestinationMap', { 
+                origin: origin,
+                destination: destination,
+                time: time,
+                amount: amount,
+            });
         }
     }, [isGilbutArrived, navigation]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setIsGilbutArrived(true);
+        }, 5000);
+        return () => clearTimeout(timeout);
+    }, []);
 
     return (
         <View style={styles.container}>
             <View style={styles.infoContainer}>
                 <View style={styles.header}>
-                    <Text style={{fontWeight:'700', fontSize:20}}>길벗 기자리는 중</Text>
+                    <Text style={{fontWeight:'700', fontSize:20}}>길벗 기다리는 중</Text>
                     <TouchableOpacity>
                         <Text style={{fontWeight:'500', fontSize:15}}>요청 취소</Text>
                     </TouchableOpacity>

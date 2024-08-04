@@ -5,7 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import getWalkingRoute from '@/utils/getWalkingRoute';
 import { Colors } from '@/constants/Colors';
 import RouteInfoView from '@/components/Map/RouteInfoView';
-import ConfirmedArrivalModal from '@/components/Map/ConfirmedArrivalModal';
+import RequestConfirmArrivalModal from '@/components/Map/RequestConfirmArrivalModal';
 
 const routeCircleMarker = require('../../assets/images/routeCircleMarker.png');
 
@@ -152,7 +152,7 @@ export default function PathToRequesterMap() {
                 </Text>
             </TouchableOpacity>
 
-            <ConfirmedArrivalModal
+            <RequestConfirmArrivalModal
                 visible={showConfirmModal}
                 onConfirm={handleRequestConfirm}
                 onCancel={handleCancel}

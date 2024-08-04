@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, Image } from 'react-na
 import { Colors } from '@/constants/Colors';
 
 
-export default function confirmedArrivalModal({visible, onConfirm, onCencel, placeName, clientName}) {
+export default function RequestConfirmArrivalModal({visible, onConfirm, onCencel, placeName, clientName}) {
     if (!visible) {
         return null;
     }

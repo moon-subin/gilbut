@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Platform, Dimensions, Image } from 'react-native';
 import MapView, { Marker, Polyline, Callout } from 'react-native-maps';
-import { useRoute } from '@react-navigation/native'; 
+import { useNavigation, useRoute } from '@react-navigation/native';
 import getWalkingRoute from '@/utils/getWalkingRoute';
 import { Colors } from '@/constants/Colors';
-import RouteInfoView from '@/components/Map/RouteInfoView';
-import ConfirmedArrivalModal from '@/components/Map/ConfirmedArrivalModal';
+import RouteInfoViewDisabled from '@/components/Map/RouteInfoViewDisabled';
+import ResponseConfirmArrivalModal from '@/components/Map/ResponseConfirmArrivalModal';
 
 const routeCircleMarker = require('../../assets/images/routeCircleMarker.png');
 
@@ -18,48 +18,49 @@ const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function PathToDestinationMap() {
+    const navigation = useNavigation();
     const route = useRoute();
-    const selectedRequest = route.params.request;
-    const myLocation = route.params.region;
+
+    const _origin = route.params.origin;
+    const _destination = route.params.destination;
+    const time = route.params.time;
+    const amount = route.params.amount;
+
+    // origin address, lat, lng
+    // destination address, location {lat, lng}, name
 
     const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
-    const [phase, setPhase] = useState(1);
+
+    // const [phase, setPhase] = useState(1);
     const [mapRegion, setMapRegion] = useState({
-        latitude: myLocation.latitude,
-        longitude: myLocation.longitude,
+        latitude: _origin.lat,
+        longitude: _origin.lng,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
     });
     const [distance, setDistance] = useState(0);
-    const [time, setTime] = useState(0);
     const [routeCoords, setRouteCoords] = useState([]);
     const mapRef = useRef<MapView>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+    const gilbutInfo = {
+        name: '나는너의길벗',
+        gender: '여자',
+        age: '24',
+        level: 2,
+    }
+
     useEffect(() => {
-        if (selectedRequest) {
-            if (phase === 1) {
-                setOrigin({
-                    latitude: myLocation.latitude,
-                    longitude: myLocation.longitude,
-                }),
-                setDestination({
-                    latitude: selectedRequest.clientLocation.coord.latitude,
-                    longitude: selectedRequest.clientLocation.coord.longitude,
-                });
-            } else if (phase === 2) {
-                setOrigin({
-                    latitude: selectedRequest.clientLocation.coord.latitude,
-                    longitude: selectedRequest.clientLocation.coord.longitude,
-                }),
-                setDestination({
-                    latitude: selectedRequest.requestPlace.coord.latitude,
-                    longitude: selectedRequest.requestPlace.coord.longitude,
-                });
-            }
-        }
-    }, [phase, selectedRequest]);
+        setOrigin({
+            latitude: _origin.lat,
+            longitude: _origin.lng,
+        }),
+        setDestination({
+            latitude: _destination.location.lat,
+            longitude: _destination.location.lng,
+        });
+    }, []);
 
     useEffect(() => {
         const fetchRoute = async () => {
@@ -68,7 +69,7 @@ export default function PathToDestinationMap() {
                 if (routeData) {
                     drawRoute(routeData);
                     setDistance(routeData[0].properties.totalDistance);
-                    setTime(routeData[0].properties.totalTime);
+                    // setTime(routeData[0].properties.totalTime);
                 }
             }
         };
@@ -90,19 +91,30 @@ export default function PathToDestinationMap() {
             }
         }
         setRouteCoords(coords);
+        // console.log('routecoords: ', routeCoords);
     };
     
-    const handlePress = () => {
-        if (phase === 1) {
-            setPhase(2);
-        } else {
+    // const handlePress = () => {
+    //     if (phase === 1) {
+    //         setPhase(2);
+    //     } else {
+    //         setShowConfirmModal(true);
+    //     }
+    // };   
+    
+    // 일단 5초 지나면 모달 열리게
+    useEffect(() => {
+        const timeout = setTimeout(() => {
             setShowConfirmModal(true);
-        }
-    };      
+            // setShowConfirmModal(false);
+        }, 5000);
+        return () => clearTimeout(timeout);
+    }, []);
 
     const handleRequestConfirm = () => {
         setShowConfirmModal(false);
-    }
+        navigation.navigate('FinishedMatchingPage', { amount: amount });
+    };
 
     const handleCancel = () => {
         setShowConfirmModal(false);
@@ -110,24 +122,22 @@ export default function PathToDestinationMap() {
 
     return (
         <View style={styles.container}>
-            <RouteInfoView 
-                phase={phase} 
-                routeInfo={selectedRequest} 
-                myLatitude={myLocation.latitude} 
-                myLongitude={myLocation.longitude}
-                time={time} />
+            <RouteInfoViewDisabled 
+                origin={_origin} 
+                destination={_destination}
+                time={time}
+                gilbutInfo={gilbutInfo} />
 
             <MapView
                 style={styles.map}
                 region={mapRegion}
                 ref={mapRef}
             >
-
                 {origin && 
                     <Marker coordinate={origin} image={routeCircleMarker}>
                             <View style={styles.calloutContainer}>
                                 <Image source={kittyProfile} style={styles.profilePic} />
-                                <Text style={styles.markerText}>내 위치</Text>
+                                <Text style={styles.markerText}>출발지</Text>
                             </View>
                     </Marker>
                 }
@@ -135,7 +145,7 @@ export default function PathToDestinationMap() {
                     <Marker coordinate={destination} image={routeCircleMarker}>
                             <View style={styles.calloutContainer}>
                                 <Image source={kittyProfile} style={styles.profilePic} />
-                                <Text style={styles.markerText}>의뢰자 위치</Text>
+                                <Text style={styles.markerText}>목적지</Text>
                             </View>
                     </Marker>
                 }
@@ -146,18 +156,11 @@ export default function PathToDestinationMap() {
                     />}
             </MapView>
 
-            <TouchableOpacity style={styles.arrivalBtnContainer} onPress={handlePress}>
-                <Text style={styles.btnText}>
-                    {phase === 1 ? '의뢰자 만남' : '의뢰 장소 도착'}
-                </Text>
-            </TouchableOpacity>
-
-            <ConfirmedArrivalModal
+            <ResponseConfirmArrivalModal
                 visible={showConfirmModal}
                 onConfirm={handleRequestConfirm}
                 onCancel={handleCancel}
-                placeName={selectedRequest.requestPlace.name}
-                clientName={selectedRequest.clientName}
+                gilbutName={gilbutInfo.name}
             />
         </View>
     );

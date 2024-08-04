@@ -69,8 +69,8 @@ export default function ProfilePage() {
                     <TouchableOpacity>
                         <Text style={styles.contentText}>1365/VMS 계정 수정</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={styles.contentText}>포인트 및 등급제도 안내</Text>
+                    <TouchableOpacity onPress={()=>{navigation.navigate('LevelRewardGuidePage')}}>
+                        <Text style={styles.contentText}>등급제도 및 리워드 안내</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <Text style={styles.contentText}>후원하기</Text>
