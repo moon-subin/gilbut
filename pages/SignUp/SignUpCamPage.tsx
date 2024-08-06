@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Import useContext
 import { View, StyleSheet, Text, Pressable, Image, Modal, Alert } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import PrivacyTermCheckBox from '../../components/PrivacyTermCheckBox';
 import GoToPageButton from '../../components/GoToPageButton';
 import CameraModal from '../../components/CameraModal';
+import { UserContext } from '@/Context/UserContext';
 
 const addCircle = require('../../assets/images/add-circle.png');
 
 export default function SignUpCamPage() {
     const route = useRoute();
     const navigation = useNavigation();
+    const authCard = route.params.authCard;
+    const userType = route.params.userType;
+
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
     const [isChecked, setChecked] = useState(false);
     const [camModalVisible, setCamModalVisible] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
 
-    const authCard = route.params.authCard;
 
     const handleModalClose = (imageUri) => {
         setCapturedImage(imageUri); // Update state with the captured image URI
@@ -29,12 +32,22 @@ export default function SignUpCamPage() {
     };
 
     const handleNextPage = () => {
-        navigation.navigate('SignUpCriminalRecChkPage', { authCardImage: capturedImage });
-
         if (isChecked && capturedImage) {
-            navigation.navigate('SignUpCriminalRecChkPage', { authCardImage: capturedImage });
+            if (userType === 'blind') {
+                navigation.navigate('SignUpDocsFinPage', { 
+                    authCardImage: capturedImage,
+                    authCard: authCard,
+                    userType: userType
+                });
+            } else {
+                navigation.navigate('SignUpCriminalRecChkPage', { 
+                    authCardImage: capturedImage,
+                    authCard: authCard,
+                    userType: userType
+                });
+            }
         } else {
-            // Alert.alert("Error", "Please capture an image and agree to the terms.");
+            Alert.alert("Error", "Please capture an image and agree to the terms.");
         }
     };
 

@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 
 import LogsPage from '../pages/MyPage/LogsPage';
 import { UserLocationContext } from '@/Context/UserLocationContext';
+import { UserProvider } from '@/Context/UserContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,11 +36,13 @@ export default function RootLayout() {
 
 
   return (
-    <Stack>
-      <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="logs" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <UserProvider>
+      <Stack>
+        <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="logs" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </UserProvider>
   );
 }

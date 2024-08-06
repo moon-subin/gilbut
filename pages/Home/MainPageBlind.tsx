@@ -12,7 +12,7 @@ import VoiceSearchPlaceModal from '@/components/Map/VoiceSearchPlaceModal';
 
 const micIcon = require('../../assets/images/mic_l.png');
 
-export default function MainPageDisabled() {
+export default function MainPageBlind() {
     const navigation = useNavigation();
     const [mapRegion, setMapRegion] = useState(null);
     const [selectedPlace, setSelectedPlace] = useState(null);

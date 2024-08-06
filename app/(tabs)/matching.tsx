@@ -47,6 +47,7 @@ export default function TabTwoScreen() {
                 <Stack.Screen name="WaitingGilbutPage" component={WaitingGilbutPage} options={{ headerShown: false }} />
                 <Stack.Screen name="PathToDestinationMap" component={PathToDestinationMap} options={{ headerShown: false }} />
                 <Stack.Screen name="FinishedMatchingPage" component={FinishedMatchingPage} options={{ headerShown: false }} />
+                
                 <Stack.Screen name="PathToRequesterMap" component={PathToRequesterMap} options={{ headerShown: false }} />
                 <Stack.Screen name="FinePage" component={FinePage} options={{ headerShown: false }} />
                 <Stack.Screen name="RewardPage" component={RewardPage} options={{ headerShown: false }} />

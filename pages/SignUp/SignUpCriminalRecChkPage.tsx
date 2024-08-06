@@ -1,22 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Import useContext
 import { View, StyleSheet, Text, Image, TouchableOpacity, Linking, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import { Colors } from '@/constants/Colors';
 
 import GoToPageButton from '../../components/GoToPageButton';
 import PrivacyTermCheckBox from '../../components/PrivacyTermCheckBox';
+import { UserContext } from '@/Context/UserContext';
 
 const fileAttach = require('../../assets/images/file-attach.png');
 const FOLDER_NAME = 'documents';
 
 
 export default function SignUpCriminalRecChkPage() {
+    const route = useRoute();
     const navigation = useNavigation();
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
     const [attachedFile, setAttachedFile] = useState(null);
     const [isChecked, setChecked] = useState(false);
+
+    const authCard = route.params.authCard;
+    const userType = route.params.userType;
 
     const authDoc = '범죄경력회보서';
     const DOCUMENTS_FOLDER = `${FileSystem.documentDirectory}${FOLDER_NAME}/`;
@@ -113,10 +118,16 @@ export default function SignUpCriminalRecChkPage() {
     };
 
     const handleNextPage = () => {
-        navigation.navigate('SignUpDocsFinPage');
+        navigation.navigate('SignUpDocsFinPage', { 
+            authCard: authCard,
+            userType: userType
+        });
 
         if (isChecked && attachedFile) {
-            navigation.navigate('SignUpDocsFinPage');
+            navigation.navigate('SignUpDocsFinPage', { 
+                authCard: authCard,
+                userType: userType
+            });
         } else {
             // Alert.alert("Error", "Please capture an image and agree to the terms.");
         }

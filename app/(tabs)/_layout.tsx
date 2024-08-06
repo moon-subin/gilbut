@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-
+import React, { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 
@@ -11,33 +11,37 @@ import matchingIconFocused from '../../assets/images/bar-icons/tabmatching-activ
 import profileIcon from '../../assets/images/bar-icons/tabprofile-inactive.png';
 import profileIconFocused from '../../assets/images/bar-icons/tabprofile-active.png';
 
-
-
 export default function TabLayout() {
+  const [activeTab, setActiveTab] = useState('index'); // Default to 'index'
+
+  const handleTabPress = (e) => {
+    e.preventDefault(); // Prevent navigation from 'matching'
+    
+  };
 
   return (
     <Tabs
       screenOptions={{
-          headerShown: false,
-          tabBarStyle: {
-            borderTopWidth: 0, // 탭 바 위쪽 테두리 제거
-            height: '12%', // 탭 바 높이 조정
-            shadowColor: '#000', // 그림자 색상
-            shadowOffset: { width: 0, height: -10 }, // 그림자 오프셋
-            shadowOpacity: 0.1, // 그림자 불투명도
-            shadowRadius: 10, // 그림자 반경
-            elevation: 5, // Android 그림자 효과
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: 'bold',
-            color: Colors.black,
-          },
-          tabBarItemStyle: {
-            justifyContent: 'center',
-            alignContent: 'space-around',
-            margin: 10,
-          }
+        headerShown: false,
+        tabBarStyle: {
+          borderTopWidth: 0, // Remove top border
+          height: '12%', // Adjust tab bar height
+          shadowColor: '#000', // Shadow color
+          shadowOffset: { width: 0, height: -10 }, // Shadow offset
+          shadowOpacity: 0.1, // Shadow opacity
+          shadowRadius: 10, // Shadow radius
+          elevation: 5, // Android shadow effect
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+          color: Colors.black,
+        },
+        tabBarItemStyle: {
+          justifyContent: 'center',
+          alignContent: 'space-around',
+          margin: 10,
+        }
       }}>
       <Tabs.Screen
         name="index"
@@ -47,8 +51,9 @@ export default function TabLayout() {
             <TabBarIcon
               focused={focused}
               image={focused ? homeIconFocused : homeIcon}
-            />          
+            />
           ),
+
         }}
       />
       <Tabs.Screen
@@ -59,7 +64,13 @@ export default function TabLayout() {
             <TabBarIcon
               focused={focused}
               image={focused ? matchingIconFocused : matchingIcon}
-            />          
+            />
+          ),
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              {...props}
+              onPress={(e) => handleTabPress(e)}
+            />
           ),
         }}
       />
@@ -71,8 +82,9 @@ export default function TabLayout() {
             <TabBarIcon
               focused={focused}
               image={focused ? profileIconFocused : profileIcon}
-            />          
+            />
           ),
+
         }}
       />
     </Tabs>

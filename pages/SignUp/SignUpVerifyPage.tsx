@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Import useContext
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
+import { UserContext } from '@/Context/UserContext';
 
 import GoToPageButton from '../../components/GoToPageButton';
 
@@ -14,14 +15,26 @@ export default function SignUpVerifyPage() {
 
     const [selectedOption, setSelectedOption] = useState(null);
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
+    const [userType, setUserType] = useState(null); // 'visuallyImpaired' or 'normal'
+
+    // const { setUserType } = useContext(UserContext);
+
 
     useEffect(() => {
         setIsNextButtonYellow(selectedOption !== null);
+        
+        if (selectedOption === 'welfare') {
+            setUserType('blind');
+        } else if (selectedOption === 'idCard' || selectedOption === 'driverLicense') {
+            setUserType('helper');
+        } else {
+            setUserType(null);
+        }
     }, [selectedOption]);
 
     const getAuthCard = (option) => {
         switch (option) {
-            case 'walfare':
+            case 'welfare':
                 return '복지카드';
             case 'idCard':
                 return '신분증';
@@ -34,7 +47,10 @@ export default function SignUpVerifyPage() {
 
     const handleNextPage = () => {
         if (isNextButtonYellow) {
-            navigation.navigate('SignUpCamPage', {authCard: getAuthCard(selectedOption)});
+            navigation.navigate('SignUpCamPage', {
+                authCard: getAuthCard(selectedOption),
+                userType: userType
+            });
         }
     };
 
@@ -50,7 +66,7 @@ export default function SignUpVerifyPage() {
                 <Text style={styles.idTitle}>시각장애인</Text>
                 <TouchableOpacity
                     style={[styles.button, selectedOption === 'welfare' && styles.selectedButton]}
-                    onPress={() => setSelectedOption('welfare')}
+                    onPress={() => setSelectedOption('welfare') }
                 >
                     <Text style={styles.buttonText}>복지카드</Text>
                     <Image

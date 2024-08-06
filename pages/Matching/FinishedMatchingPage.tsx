@@ -14,7 +14,7 @@ export default function FinishedMatchingPage() {
     const amount = route.params.amount;
 
     const handleConfirm = () => {
-        navigation.navigate('MainPageDisabled');
+        navigation.navigate('MainPageBlind');
     };
 
     return (

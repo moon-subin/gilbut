@@ -8,17 +8,15 @@ import SignUpCriminalRecChkPage from '@/pages/SignUp/SignUpCriminalRecChkPage';
 import SignUpDocsFinPage from '@/pages/SignUp/SignUpDocsFinPage';
 import SignUpFinPage from '@/pages/SignUp/SignUpFinPage';
 import SignUpSetProfile from '@/pages/SignUp/SignUpSetProfile';
-import SignUpSetProfileDisabled from '@/pages/SignUp/SignUpSetProfileDisabled';
+import SignUpSetProfileBlind from '@/pages/SignUp/SignUpSetProfileBlind';
 
 const Stack = createNativeStackNavigator();
 
 export const unstable_settings = {
-    initialRouteName: 'SignUpInputPage',
+    initialRouteName: 'SignUpVerifyPage',
 };
 
 export default function SignUp() {
-
-
     return (
         <Stack.Navigator>
             <Stack.Screen name="SignUpInputPage" component={SignUpInputPage} options={{ headerShown: false }} />
@@ -28,7 +26,7 @@ export default function SignUp() {
             <Stack.Screen name="SignUpDocsFinPage" component={SignUpDocsFinPage} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpFinPage" component={SignUpFinPage} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpSetProfile" component={SignUpSetProfile} options={{ headerShown: false }} />
-            <Stack.Screen name="SignUpSetProfileDisabled" component={SignUpSetProfileDisabled} options={{ headerShown: false }} />
+            <Stack.Screen name="SignUpSetProfileBlind" component={SignUpSetProfileBlind} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
 }

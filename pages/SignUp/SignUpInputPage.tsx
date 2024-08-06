@@ -3,10 +3,12 @@ import { StyleSheet, View, Text, Alert, TextInput, TouchableOpacity } from 'reac
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as SecureStore from 'expo-secure-store';
 
-import Input from '../../components/Input';
 import CustomButton from '../../components/CustomButton';
 import GoToPageButton from '../../components/GoToPageButton';
+
+import { sendEmailVerificationCode, verifyEmailCode, signUpMember, loginMember } from '../../Services/SignUp/MembersApis';
 
 export default function SignUpInputPage() {
 
@@ -14,6 +16,7 @@ export default function SignUpInputPage() {
 
     const [id, setId] = useState('');
     const [email, setEmail] = useState('');
+    const [verificationCode, setVerificationCode] = useState('');
     const [emailVerified, setEmailVerified] = useState(false);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -38,30 +41,48 @@ export default function SignUpInputPage() {
             setIsFormValid(true);
         } else {
             // 추후 수정
-            setIsFormValid(true);
+            setIsFormValid(false);
         }
     };
 
-    const handleSendEmail = () => {
-        // Add logic to send verification email
-        Alert.alert('발송 버튼 누름');
+    const handleSendEmail = async () => {
+        try {
+            await sendEmailVerificationCode(email);
+            Alert.alert('인증번호가 이메일로 발송되었습니다.');
+        } catch (error) {
+            Alert.alert('이메일 발송 중 오류가 발생했습니다.');
+        }
     };
 
-    const handleVerifyEmail = () => {
-        // Add logic to verify the email
-        setEmailVerified(true);
-        Alert.alert('인증 버튼 누름');
+    const handleVerifyEmail = async () => {
+        try {
+            await verifyEmailCode(email, verificationCode);
+            setEmailVerified(true);
+            Alert.alert('이메일 인증이 완료되었습니다.');
+        } catch (error) {
+            Alert.alert('이메일 인증 중 오류가 발생했습니다.');
+        }
     };
 
-    const handleNextPage = () => {
-        console.log(isFormValid);
-        console.log(id);
-        console.log(email);
-        console.log(emailVerified);
-        console.log(password);
-        console.log(confirmPassword);
+    const handleNextPage = async () => {
+        navigation.navigate('SignUpVerifyPage');
+
         if (isFormValid) {
-            navigation.navigate('SignUpVerifyPage');
+            const userData = {
+                username: id,
+                memberType: '', // replace with the actual member type
+                email,
+                code: verificationCode,
+                password,
+                passwordChk: confirmPassword,
+            };
+
+            try {
+                await signUpMember(userData);
+                navigation.navigate('SignUpVerifyPage');
+            } catch (error) {
+                Alert.alert('회원가입 중 오류가 발생했습니다.');
+            }
         }
     };
 
@@ -108,6 +129,8 @@ export default function SignUpInputPage() {
                         <TextInput
                             style={[styles.input, {width:'75%'}]} 
                             placeholder="인증 번호를 입력해주세요"
+                            value={verificationCode}
+                            onChangeText={setVerificationCode}
                         />
                         <View style={{marginLeft: 'auto'}}>
                             <CustomButton 

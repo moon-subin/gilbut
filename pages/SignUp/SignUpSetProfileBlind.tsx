@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Import useContext
 import { ScrollView, StyleSheet, View, Text, TextInput, Image, TouchableOpacity, FlatList } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
@@ -8,12 +8,15 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 import GoToPageButton from '../../components/GoToPageButton';
 import cityList from '@/assets/datas/cityList';
+import { UserContext } from '@/Context/UserContext'; // Import the UserContext
 
 const user = require('../../assets/images/user.png');
 const addProfile = require('../../assets/images/addProfile.png');
 
-export default function SignUpSetProfileDisabled() {
+export default function SignUpSetProfileBlind() {
     const navigation = useNavigation(); 
+    const { setUserType } = useContext(UserContext);
+
     const [profileImage, setProfileImage] = useState(null); 
     const [cityListVisible, setCityListVisible] = useState(false);
     const [visionListVisible, setVisionListVisible] = useState(false);
@@ -70,6 +73,13 @@ export default function SignUpSetProfileDisabled() {
     const isCitySelected = (city) => city === selectedCity;
     const isSubAreaSelected = (subArea) => subArea === selectedSubArea;
     const isVisionSelected = (vision) => vision === selectedVision;
+
+    const handleStartButton = () => {
+        setUserType('blind');
+        navigation.navigate('(tabs)');
+
+        // if ~~ 입력 완료되면
+    };
 
     return (
         <View style={styles.container}>
@@ -222,7 +232,7 @@ export default function SignUpSetProfileDisabled() {
             <View style={styles.pageBtnContainer}>
                 <GoToPageButton 
                     title="길벗 시작하기"
-                    onPress={() => navigation.navigate('SignUpSetProfile')}
+                    onPress={handleStartButton}
                     buttonColor={Colors.darkYellow}
                     style={{ width: '100%' }}
                 />
@@ -362,7 +372,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 8,
         borderColor: Colors.yellow,
-        height: 150,
+        height: 'auto',
         marginTop: 10,
     },
     pageBtnContainer: {

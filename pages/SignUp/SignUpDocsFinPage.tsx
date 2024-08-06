@@ -1,22 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Import useContext
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Checkbox from 'expo-checkbox';
 
 import { Colors } from '@/constants/Colors';
 import GoToPageButton from '../../components/GoToPageButton';
+import { UserContext } from '@/Context/UserContext';
 
 const successCheck = require('../../assets/images/successCheck.png');
 
 export default function SignUpDocsFinPage() {
+    const route = useRoute();
     const navigation = useNavigation();
     const [isChecked, setChecked] = useState(false);
+
+    const authCard = route.params.authCard;
+    const userType = route.params.userType;
+    let docs = '';
+
+    if (userType === 'blind') {
+        docs = '복지 카드 진위';
+    } else {
+        docs = `${authCard}과 범죄경력회보서`;
+    }
+
+    const handleNextPage = () => {
+        if (userType === 'blind') {
+            navigation.navigate('SignUpSetProfileBlind');
+        } else {
+            navigation.navigate('SignUpSetProfile');
+        }
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.messageContainer}>
                 <Text style={styles.messageText}>
-                    신분증과 범죄경력회보서 확인에 {"\n"}
+                    {authCard} 확인에 {"\n"}
                     최대 1-2일이 소요될 수 있어요 !{"\n\n"}
                     확인이 끝나면 알림을 통해 알려드려요
                 </Text>
@@ -34,7 +54,7 @@ export default function SignUpDocsFinPage() {
             <View style={styles.pageBtnContainer}>
                 <GoToPageButton 
                     title="프로필 설정"
-                    onPress={() => navigation.navigate('SignUpSetProfileDisabled')}
+                    onPress={handleNextPage}
                     buttonColor={Colors.darkYellow}
                     style={{width: '100%'}}>
                 </GoToPageButton>

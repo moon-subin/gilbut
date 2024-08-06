@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Import useContext
 import { ScrollView, StyleSheet, View, Text, TextInput, Image, TouchableOpacity, FlatList } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
@@ -8,12 +8,15 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 import GoToPageButton from '../../components/GoToPageButton';
 import cityList from '@/assets/datas/cityList';
+import { UserContext } from '@/Context/UserContext'; // Import the UserContext
 
 const user = require('../../assets/images/user.png');
 const addProfile = require('../../assets/images/addProfile.png');
 
 export default function SignUpSetProfile() {
     const navigation = useNavigation(); 
+    const { setUserType } = useContext(UserContext);
+    
     const [profileImage, setProfileImage] = useState(null); 
     const [listVisible, setListVisible] = useState(false);
     const [selectedCity, setSelectedCity] = useState(null);
@@ -56,6 +59,7 @@ export default function SignUpSetProfile() {
     const isSubAreaSelected = (subArea) => subArea === selectedSubArea;
 
     const handleStartButton = () => {
+        setUserType('helper');
         navigation.navigate('(tabs)');
 
         // if ~~ 입력 완료되면

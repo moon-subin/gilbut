@@ -114,7 +114,7 @@ export default function RequestLetterPage() {
 
     return (
         <View>
-            <Header title="의뢰서 작성" naviPage='MainPageDisabled' />
+            <Header title="의뢰서 작성" naviPage='MainPageBlind' />
             <View style={styles.container}>
                 <View style={styles.searchContainer}>
                     <Ionicons name="swap-vertical-outline" color={Colors.gray} size={28} style={styles.swap} />
