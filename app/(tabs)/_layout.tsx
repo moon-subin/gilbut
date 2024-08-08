@@ -1,5 +1,5 @@
-import { Tabs } from 'expo-router';
-import React, { useState } from 'react';
+import { Tabs, useNavigation, useRouter, usePathname } from 'expo-router';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
@@ -12,11 +12,28 @@ import profileIcon from '../../assets/images/bar-icons/tabprofile-inactive.png';
 import profileIconFocused from '../../assets/images/bar-icons/tabprofile-active.png';
 
 export default function TabLayout() {
+  const navigation = useNavigation();
+  const pathname = usePathname(); // Get the current pathname
   const [activeTab, setActiveTab] = useState('index'); // Default to 'index'
 
-  const handleTabPress = (e) => {
-    e.preventDefault(); // Prevent navigation from 'matching'
-    
+  useEffect(() => {
+    // When the pathname changes, update the activeTab accordingly
+    if (pathname.includes('matching')) {
+      setActiveTab('matching');
+    } else if (pathname.includes('mypage')) {
+      setActiveTab('mypage');
+    } else {
+      setActiveTab('index');
+    }
+  }, [pathname]);
+
+  const handleTabPress = (tabName, e) => {
+    if (tabName === 'matching' || activeTab === 'matching') {
+      e.preventDefault(); // Prevent navigation from or to 'matching'
+    } else {
+      navigation.navigate(tabName);
+      setActiveTab(tabName); // Set the active tab state
+    }
   };
 
   return (
@@ -47,20 +64,25 @@ export default function TabLayout() {
         name="index"
         options={{
           title: '홈',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
               image={focused ? homeIconFocused : homeIcon}
             />
           ),
-
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              {...props}
+              onPress={(e) => handleTabPress('index', e)}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="matching"
         options={{
           title: '이용/알림',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
               image={focused ? matchingIconFocused : matchingIcon}
@@ -69,7 +91,7 @@ export default function TabLayout() {
           tabBarButton: (props) => (
             <TouchableOpacity
               {...props}
-              onPress={(e) => handleTabPress(e)}
+              onPress={(e) => e.preventDefault()} // Prevent navigation to 'matching'
             />
           ),
         }}
@@ -78,13 +100,18 @@ export default function TabLayout() {
         name="mypage"
         options={{
           title: '마이',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <TabBarIcon
               focused={focused}
               image={focused ? profileIconFocused : profileIcon}
             />
           ),
-
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              {...props}
+              onPress={(e) => handleTabPress('mypage', e)}
+            />
+          ),
         }}
       />
     </Tabs>

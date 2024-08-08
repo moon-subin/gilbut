@@ -35,6 +35,8 @@ export default function HomeScreen() {
 
     const { location } = useContext(UserLocationContext);
 
+    const handleMicButton = () => {
+    };
 
     useEffect(()=>{
         if(location)
@@ -54,8 +56,8 @@ export default function HomeScreen() {
     
     return (
       <View style={styles.container}>
-        <View style={{position:'absolute',zIndex:20,top:70,left:"5%",right:"5%",width:"80%"}}>
-          <PlaceSearchBar placeholder={"장소 검색"} />
+        <View style={{position:'absolute',zIndex:20,top:70,left:"5%",right:"5%",width:"90%"}}>
+          <PlaceSearchBar placeholder={"장소 검색"} handleMicButton={handleMicButton} />
         </View>
         <MapView 
           style={styles.map}
