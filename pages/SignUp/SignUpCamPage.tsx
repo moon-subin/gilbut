@@ -6,6 +6,7 @@ import PrivacyTermCheckBox from '../../components/PrivacyTermCheckBox';
 import GoToPageButton from '../../components/GoToPageButton';
 import CameraModal from '../../components/CameraModal';
 import { UserContext } from '@/Context/UserContext';
+import { uploadWelfareCard } from '@/Services/SignUp/MembersApis';
 
 const addCircle = require('../../assets/images/add-circle.png');
 
@@ -31,9 +32,21 @@ export default function SignUpCamPage() {
         setIsNextButtonYellow(checked && capturedImage !== null); // Update button color based on checkbox and image state
     };
 
-    const handleNextPage = () => {
+    const handleNextPage = async () => {
         if (isChecked && capturedImage) {
             if (userType === 'blind') {
+
+                try {
+                    await uploadWelfareCard(userType, capturedImage);
+                    navigation.navigate('SignUpDocsFinPage', { 
+                        authCardImage: capturedImage,
+                        authCard: authCard,
+                        userType: userType
+                    });
+                } catch (error) {
+                    Alert.alert('복지카드 인증 중 오류가 발생했습니다.');
+                }
+
                 navigation.navigate('SignUpDocsFinPage', { 
                     authCardImage: capturedImage,
                     authCard: authCard,

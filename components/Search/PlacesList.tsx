@@ -44,7 +44,7 @@ export default function PlacesList({ placesList, onSelectPlace, region }) {
     };
 
     const handleViewOtherRequests = () => {
-        setSelectedIndex(null);
+        // setSelectedIndex(null);
         setSelectedPlace(null);
         setShowDetailModal(false);
     };
@@ -84,7 +84,11 @@ export default function PlacesList({ placesList, onSelectPlace, region }) {
                 numColumns={isGrid ? 2 : 1}
                 renderItem={({item,index})=>(
                     <TouchableOpacity onPress={() => handleCardPress(index, item)}>
-                        <View style={[styles.cardContainer, isGrid ? styles.cardContainerW2 : styles.cardContainerW1, selectedIndex === index && (isGrid ? null : styles.selectedCard)]}>
+                        <View style={[
+                            styles.cardContainer, 
+                            isGrid ? styles.cardContainerW2 : styles.cardContainerW1, 
+                            selectedIndex === index && (isGrid ? null : styles.selectedCard)
+                        ]}>
                             <PlaceCard place={item} />
                         </View>
                     </TouchableOpacity>
@@ -129,8 +133,8 @@ const styles = StyleSheet.create({
         width: screenWidth * 0.45,
     },
     selectedCard: {
-        width: screenWidth * 0.5, // 선택된 카드는 더 크게 표시합니다.
-        height: screenHeight * 0.28, // 선택된 카드는 더 크게 표시합니다.
+        width: screenWidth * 0.5, 
+        height: screenHeight * 0.28,
         
     },
     flatListContent: {

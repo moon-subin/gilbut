@@ -4,28 +4,37 @@ import { Colors } from '@/constants/Colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { GOOGLEMAP_KEY } from '@env';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import { registerRequest } from '@/Services/Blind/RequestApis';
 
 export default function PaymentPage() {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const origin = route.params.origin;
-    const destination = route.params.destination;
-    const time = route.params.time;
-    const amount = route.params.amount;
-    // console.log(origin);
-    // console.log(destName);
-    // console.log(time);
-    // console.log(amount);
+    const originName = route.params.originName;
+    const destName = route.params.destName;
 
-    const handleNextPage = () => {
+    const requestData = route.params.requestData;
+    console.log('payment- ', requestData);
+
+    const handleNextPage = async () => {
         navigation.navigate('WaitingMatchingPage', { 
-            origin: origin,
-            destination: destination,
-            time: time,
-            amount: amount,
+            requestData: requestData,
+            originName: originName,
+            destName: destName,
         });
+
+        try {
+            await registerRequest(requestData);
+            navigation.navigate('WaitingMatchingPage', { 
+                requestData: requestData,
+                originName: originName,
+                destName: destName,
+
+            });
+        } catch (error) {
+            Alert.alert('의뢰 요청 중 오류가 발생했습니다.');
+        }
+
     };
 
     return (
@@ -55,7 +64,7 @@ export default function PaymentPage() {
             </View>
             <View>
                 <Text style={styles.subText}>예상 결제 금액</Text>
-                <Text>{amount}원</Text>
+                <Text>{requestData.estSalary}원</Text>
             </View>
             <TouchableOpacity style={styles.requestButton} onPress={handleNextPage}>
                 <Text style={styles.requestText}>선택 후 길 안내 요청하기</Text>

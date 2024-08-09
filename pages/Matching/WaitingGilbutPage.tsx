@@ -12,10 +12,10 @@ export default function WaitingMatchingPage() {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const origin = route.params.origin;
-    const destination = route.params.destination;
-    const time = route.params.time;
-    const amount = route.params.amount;
+    const destName = route.params.destName;
+    const requestData = route.params.requestData;
+
+    // console.log('waitinggilbut - requestData: ', requestData);
 
     const [expanded, setExpanded] = useState(false);
     const [leftTime, setLeftTime] = useState(5);
@@ -52,10 +52,8 @@ export default function WaitingMatchingPage() {
     useEffect(() => {
         if (isGilbutArrived) {
             navigation.navigate('PathToDestinationMap', { 
-                origin: origin,
-                destination: destination,
-                time: time,
-                amount: amount,
+                requestData: requestData,
+                destName: destName,
             });
         }
     }, [isGilbutArrived, navigation]);

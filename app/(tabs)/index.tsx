@@ -36,11 +36,6 @@ export default function HomePage() {
         })();
     }, []);
 
-    const getInitialScreen = () => {
-        // Determine which screen to show based on userType
-        return userType === 'blind' ? 'MainPageBlind' : 'HomeScreen';
-    };
-
     return (
         <UserLocationContext.Provider value={{ location, setLocation }}>
             <Stack.Navigator>
@@ -48,6 +43,7 @@ export default function HomePage() {
                     <Stack.Screen name="MainPageBlind" component={MainPageBlind} options={{ headerShown: false }} />
                 ) : (
                     <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
+
                 )}
                 <Stack.Screen name="RequestLetterPage" component={RequestLetterPage} options={{ headerShown: false }} />
                 <Stack.Screen name="PaymentPage" component={PaymentPage} options={{ headerShown: false }} />

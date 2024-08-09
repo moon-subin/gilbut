@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'; // Import useContext
-import { ScrollView, StyleSheet, View, Text, TextInput, Image, TouchableOpacity, FlatList } from 'react-native';
+import { ScrollView, Alert, StyleSheet, View, Text, TextInput, Image, TouchableOpacity, FlatList } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { setHelperProfile, setBlindProfile } from '@/Services/SignUp/SetProfileApis';
 
 import GoToPageButton from '../../components/GoToPageButton';
 import cityList from '@/assets/datas/cityList';
@@ -14,14 +14,27 @@ const user = require('../../assets/images/user.png');
 const addProfile = require('../../assets/images/addProfile.png');
 
 export default function SignUpSetProfile() {
+    const route = useRoute();
     const navigation = useNavigation(); 
+
+    const userType = route.params.userType;
     const { setUserType } = useContext(UserContext);
-    
+
     const [profileImage, setProfileImage] = useState(null); 
-    const [listVisible, setListVisible] = useState(false);
+    const [nickname, setNickname] = useState('');
+    const [age, setAge] = useState('');
+    const [linkedAccount, setLinkedAccount] = useState('');
+
     const [selectedCity, setSelectedCity] = useState(null);
     const [selectedSubArea, setSelectedSubArea] = useState(null);
     const [inputValue, setInputValue] = useState(''); // State for input field
+    const [inputCityValue, setInputCityValue] = useState(''); // State for input field
+
+    const [selectedVision, setSelectedVision] = useState(null);
+    const [inputVisionValue, setInputVisionValue] = useState(''); // State for input field
+
+    const [cityListVisible, setCityListVisible] = useState(false);
+    const [visionListVisible, setVisionListVisible] = useState(false);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,6 +58,10 @@ export default function SignUpSetProfile() {
         setSelectedSubArea(subArea);
     }
 
+    const handleVisionSelect = (vision) => {
+        setSelectedVision(vision);
+    }
+
     useEffect(() => {
         if (selectedCity && selectedSubArea) {
             setInputValue(`${selectedCity.name} ${selectedSubArea}`);
@@ -55,14 +72,54 @@ export default function SignUpSetProfile() {
         }
     }, [selectedCity, selectedSubArea]);
 
+    useEffect(() => {
+        if (selectedVision) {
+            setInputVisionValue(selectedVision);
+        } else {
+            setInputVisionValue('');
+        }
+    }, [selectedVision]);
+
     const isCitySelected = (city) => city === selectedCity;
     const isSubAreaSelected = (subArea) => subArea === selectedSubArea;
+    const isVisionSelected = (vision) => vision === selectedVision;
 
-    const handleStartButton = () => {
-        setUserType('helper');
+    const handleStartButton = async () => {
+        setUserType(userType);
         navigation.navigate('(tabs)');
 
-        // if ~~ 입력 완료되면
+        if (userType === 'helper') {
+            const helperProfileData = {
+                profileUrl: profileImage,
+                nickname: nickname, 
+                age: age,
+                region: inputCityValue,
+                linkedAccount: linkedAccount
+            };
+
+            try {
+                await setHelperProfile(helperProfileData);
+                navigation.navigate('(tabs)');
+            } catch (error) {
+                Alert.alert('회원가입 중 오류가 발생했습니다.');
+            }
+        } else if (userType === 'blind') {
+            const blindProfileData = {
+                profileUrl: profileImage,
+                nickname: nickname, // Replace with actual nickname input value
+                age: age, // Replace with actual age input value
+                region: inputCityValue,
+                blindType: selectedVision || 'Unknown' // Replace with actual vision type
+            };
+
+            try {
+                await setHelperProfile(blindProfileData);
+                navigation.navigate('(tabs)');
+            } catch (error) {
+                Alert.alert('회원가입 중 오류가 발생했습니다.');
+            }
+        }
+
     };
 
     return (
@@ -93,6 +150,8 @@ export default function SignUpSetProfile() {
                         <TextInput 
                             style={styles.input} 
                             placeholder="닉네임"
+                            value={nickname}
+                            onChangeText={setNickname}
                         />
                     </View>
 
@@ -101,6 +160,8 @@ export default function SignUpSetProfile() {
                         <TextInput 
                             style={styles.input} 
                             placeholder="나이"
+                            value={age}
+                            onChangeText={setAge}
                         />
                     </View>
 
@@ -115,18 +176,18 @@ export default function SignUpSetProfile() {
                                 editable={false}
                             />
                             <TouchableOpacity 
-                                onPress={() => setListVisible(!listVisible)} 
+                                onPress={() => setCityListVisible(!cityListVisible)} 
                                 style={styles.iconContainer}
                             >
                                 <Ionicons 
-                                    name={listVisible ? "chevron-up-outline" : "chevron-down-outline"} 
+                                    name={cityListVisible ? "chevron-up-outline" : "chevron-down-outline"} 
                                     color={Colors.white} 
                                     size={15} 
                                 />
                             </TouchableOpacity>
                         </View>
                         {/* 토글 아이콘 클릭 시 도시 목록 보여짐 */}
-                        {listVisible && (
+                        {cityListVisible && (
                             <View style={styles.cityListContainer}>
                                 <ScrollView showsVerticalScrollIndicator={false} style={{width:'50%'}}>
                                     <FlatList
@@ -169,13 +230,62 @@ export default function SignUpSetProfile() {
                         )}
                     </View>
 
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.inputTitle}>1365/VMS 계정 (선택)</Text>
-                        <TextInput 
-                            style={styles.input} 
-                            placeholder="계정"
-                        />
-                    </View>
+                    {userType === 'blind' && (
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputTitle}>시력 정도</Text>
+                            <View style={styles.inputWithIcon}>
+                                <TextInput 
+                                    style={styles.input} 
+                                    placeholder="시력 정도"
+                                    value={inputVisionValue}
+                                    onChangeText={text => setInputVisionValue(text)} 
+                                    editable={false}
+                               />
+                                <TouchableOpacity 
+                                    onPress={() => setVisionListVisible(!visionListVisible)} 
+                                    style={styles.iconContainer}
+                                >
+                                    <Ionicons 
+                                        name={visionListVisible ? "chevron-up-outline" : "chevron-down-outline"} 
+                                        color={Colors.white} 
+                                        size={15} 
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            {visionListVisible && (
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                    <FlatList
+                                        data={['전맹', '맹', '준맹', '저시력']}
+                                        keyExtractor={(item) => item}
+                                        renderItem={({ item }) => (
+                                            <TouchableOpacity 
+                                                style={[
+                                                    styles.item, 
+                                                    isVisionSelected(item) && styles.selectedItem
+                                                ]}
+                                                onPress={() => handleVisionSelect(item)}
+                                            >
+                                                <Text style={styles.name}>{item}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        style={styles.visionContainer}
+                                    />
+                                </ScrollView>
+                            )}
+                        </View>
+                    )}
+
+                    {userType === 'helper' && (
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.inputTitle}>1365/VMS 계정 (선택)</Text>
+                            <TextInput 
+                                style={styles.input} 
+                                placeholder="계정"
+                                value={linkedAccount}
+                                onChangeText={setLinkedAccount}
+                            />
+                        </View>
+                    )}
                 </ScrollView>
             </View>
 
@@ -328,6 +438,20 @@ const styles = StyleSheet.create({
     subAreaName: {
         fontSize: 16,
         fontWeight: '500',
+    },
+    item: {
+        padding: 10,
+    },
+    name: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    visionContainer: {
+        borderWidth: 2,
+        borderRadius: 8,
+        borderColor: Colors.yellow,
+        height: 'auto',
+        marginTop: 10,
     },
     pageBtnContainer: {
         position: 'absolute',

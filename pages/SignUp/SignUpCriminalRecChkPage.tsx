@@ -8,6 +8,7 @@ import { Colors } from '@/constants/Colors';
 import GoToPageButton from '../../components/GoToPageButton';
 import PrivacyTermCheckBox from '../../components/PrivacyTermCheckBox';
 import { UserContext } from '@/Context/UserContext';
+import { uploadHelperVerification } from '@/Services/SignUp/MembersApis';
 
 const fileAttach = require('../../assets/images/file-attach.png');
 const FOLDER_NAME = 'documents';
@@ -20,6 +21,7 @@ export default function SignUpCriminalRecChkPage() {
     const [attachedFile, setAttachedFile] = useState(null);
     const [isChecked, setChecked] = useState(false);
 
+    const authCardImage = route.params.authCardImage;
     const authCard = route.params.authCard;
     const userType = route.params.userType;
 
@@ -117,17 +119,22 @@ export default function SignUpCriminalRecChkPage() {
         setIsNextButtonYellow(checked && attachedFile !== null); // Update button color based on checkbox and image state
     };
 
-    const handleNextPage = () => {
+    const handleNextPage = async () => {
         navigation.navigate('SignUpDocsFinPage', { 
             authCard: authCard,
             userType: userType
         });
 
         if (isChecked && attachedFile) {
-            navigation.navigate('SignUpDocsFinPage', { 
-                authCard: authCard,
-                userType: userType
-            });
+            try {
+                await uploadHelperVerification(userType, authCardImage, attachedFile);
+                navigation.navigate('SignUpDocsFinPage', { 
+                    authCard: authCard,
+                    userType: userType
+                });
+            } catch (error) {
+                Alert.alert('신분증 및 범죄경력회보서 인증 중 오류가 발생했습니다.');
+            }
         } else {
             // Alert.alert("Error", "Please capture an image and agree to the terms.");
         }

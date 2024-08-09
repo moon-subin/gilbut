@@ -25,11 +25,12 @@ export default function SignUpDocsFinPage() {
     }
 
     const handleNextPage = () => {
-        if (userType === 'blind') {
-            navigation.navigate('SignUpSetProfileBlind');
-        } else {
-            navigation.navigate('SignUpSetProfile');
-        }
+        navigation.navigate('SignUpSetProfile', {userType: userType});
+        // if (userType === 'blind') {
+        //     navigation.navigate('SignUpSetProfileBlind', {userType: userType});
+        // } else {
+        //     navigation.navigate('SignUpSetProfile');
+        // }
     };
 
     return (

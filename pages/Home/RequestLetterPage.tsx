@@ -11,6 +11,10 @@ import findPlace from '@/utils/findPlace';
 import VoiceSearchPlaceModal from '@/components/Map/VoiceSearchPlaceModal';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import geocoding from '@/utils/geocoding';
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import getWalkingRoute from '@/utils/getWalkingRoute';
+import calculateAmount from '@/utils/calculateAmount';
+
 
 const bookmarkPlaces = [
     { id: '1', name: 'First Item' },
@@ -41,8 +45,12 @@ const Item = ({name, color, borderColor}: ItemProps) => (
 export default function RequestLetterPage() {
     const navigation = useNavigation();
     const route = useRoute();
-    const [address, setAddress] = useState('');
+    const [origin, setOrigin] = useState({ name: '', address: '', location: { lat: 0, lng: 0 } });
     const [destination, setDestination] = useState({ name: '', address: '', location: { lat: 0, lng: 0 } });
+    const [distance, setDistance] = useState(0);
+    const [estTime, setEstTime] = useState(0);
+    const [amount, setAmount] = useState(0);
+
     const [micModalVisible, setMicModalVisible] = useState(false);
     const [isNextButtonYellow, setIsNextButtonYellow] = useState(false);
 
@@ -50,19 +58,63 @@ export default function RequestLetterPage() {
     const lng = route.params.longitude;
 
 
+    // 출발지 검색 전
+    // 현재 위치: 주소, 위도/경도
     useEffect(() => {
         async function fetchAddress() {
             const formattedAddress = await reverseGeocoding(lat, lng);
+            // console.log('formattedAddress: ', formattedAddress);
             if (formattedAddress) {
-                setAddress(formattedAddress);
+                const currLocation = {
+                    name: formattedAddress,
+                    address: formattedAddress,
+                    location: {
+                        latitude: lat,
+                        longitude: lng,
+                    }
+                };
+                setOrigin(currLocation);
+
                 setIsNextButtonYellow(true);
+                // console.log('before origin: ', origin);
             }
         }
-
         fetchAddress();
     }, []);
 
     // console.log('address: ', address);
+
+    // 출발지 검색 후
+    // 출발 위치: 이름, 주소, 위도/경도
+    const handleOriginPlaceSelect = (place) => {
+        setOrigin(place);
+    }
+
+    // 도착지 검색 후
+    // 도착 위치: 이름, 주소, 위도/경도
+    const handleDestPlaceSelect = (place) => {
+        setDestination(place);
+        // console.log('dest: ', destination.name);    
+    }
+
+    useEffect(() => {
+        const fetchRoute = async () => {
+            if (origin && destination) {
+                const routeData = await getWalkingRoute(origin.location, destination.location);
+                const roundedTime = Math.ceil((routeData[0].properties.totalTime)/60);
+                const estAmount = calculateAmount(roundedTime);
+                if (routeData) {
+                    setDistance(routeData[0].properties.totalDistance);
+                    setEstTime(roundedTime);
+                    setAmount(estAmount);
+                    // console.log('amount: ', amount);
+                    // console.log(estTime);
+                    // setTime(routeData[0].properties.totalTime);
+                }
+            }
+        };
+        fetchRoute();
+    }, [origin, destination]);
 
     const handleModalClose = () => {
         setMicModalVisible(false);
@@ -72,56 +124,97 @@ export default function RequestLetterPage() {
         setMicModalVisible(true);
     };
 
-    const estimatedPaymentAmount = 1950;
-    const time = 17;
-
     const handleNextPage = () => {
-        navigation.navigate('matching', { 
-            screen: 'PaymentPage', 
-            params: { 
-                origin: { address, lat, lng },
-                destination: destination,
-                time: time,
-                amount: estimatedPaymentAmount,
-            }
-        });
+        // navigation.navigate('matching', { 
+        //     screen: 'PaymentPage', 
+        //     params: { 
+        //         requestData: requestData,
+        //         originName: origin.name,
+        //         destName: destination.name,
+        //     }
+        // });
+
+        if (origin && destination) {
+            const requestData = {
+                memberId: '', // Replace with actual member ID
+                blindId: '', // Replace with actual blind ID
+                blindType: '', // Replace with actual blind type
+                srcLocation: {
+                    srcLong: origin.location.longitude,
+                    srcLat: origin.location.latitude,
+                },
+                srcAddr: origin.address,
+                dstLocation: {
+                    dstLong: destination.location.longitude,
+                    dstLat: destination.location.latitude,
+                },
+                dstAddr: destination.address,
+                estTime: estTime,
+                estSalary: amount,
+                title: '', // Replace with actual title if necessary
+                additionalInfo: '', // Replace with actual additional info if necessary
+            };
+
+            navigation.navigate('matching', { 
+                screen: 'PaymentPage', 
+                params: { 
+                    requestData: requestData,
+                    originName: origin.name,
+                    destName: destination.name,
+                }
+            });
+        } else {
+            Alert.alert('Error', 'Please select both origin and destination');
+        }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const searchKeyword = '남녕고';
-                const findedPlace = await findPlace(searchKeyword);
-                const placeLocation = await geocoding(findedPlace.candidates[0].formatted_address);
-                // console.log('placeLocation: ', placeLocation);
-                setDestination({
-                    name: findedPlace.candidates[0].name,
-                    address: findedPlace.candidates[0].formatted_address,
-                    location: {
-                        lat: placeLocation.lat,
-                        lng: placeLocation.lng,
-                    }
-                });
-                console.log(destination);
-            } catch (error) {
-                Alert.alert('Error', 'Failed to fetch destination place');
-            }
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const searchKeyword = '남녕고';
+    //             const findedPlace = await findPlace(searchKeyword);
+    //             const placeLocation = await geocoding(findedPlace.candidates[0].formatted_address);
+    //             // console.log('placeLocation: ', placeLocation);
+    //             setDestination({
+    //                 name: findedPlace.candidates[0].name,
+    //                 address: findedPlace.candidates[0].formatted_address,
+    //                 location: {
+    //                     lat: placeLocation.lat,
+    //                     lng: placeLocation.lng,
+    //                 }
+    //             });
+    //             console.log(destination);
+    //         } catch (error) {
+    //             Alert.alert('Error', 'Failed to fetch destination place');
+    //         }
+    //     };
     
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
 
     return (
-        <View>
+        <View style={{flex:1}}>
             <Header title="의뢰서 작성" naviPage='MainPageBlind' />
             <View style={styles.container}>
                 <View style={styles.searchContainer}>
-                    <Ionicons name="swap-vertical-outline" color={Colors.gray} size={28} style={styles.swap} />
+                    <TouchableOpacity>
+                        <Ionicons name="swap-vertical-outline" color={Colors.gray} size={28} style={styles.swap} />
+                    </TouchableOpacity>
                     <View style={styles.searchBarContainer}>
-                        <PlaceSearchBar placeholder={address} handleMicButton={handleMicButton} />
+                        <PlaceSearchBar 
+                            placeholder={origin.address} 
+                            handleMicButton={handleMicButton}
+                            isActive={true} // Pass dynamic value based on your logic
+                            onPlaceSelect={handleOriginPlaceSelect}
+                        />                        
                         <View style={{paddingVertical:5}}/>
-                        <PlaceSearchBar placeholder="도착지 입력" handleMicButton={handleMicButton} />
+                         <PlaceSearchBar 
+                            placeholder="도착지 입력" 
+                            handleMicButton={handleMicButton} 
+                            isActive={false} // Pass dynamic value based on your logic
+                            onPlaceSelect={handleDestPlaceSelect}
+                        />
                     </View>
                 </View>
                 {/* 즐겨찾기 */}
@@ -133,6 +226,7 @@ export default function RequestLetterPage() {
                         keyExtractor={item => item.id}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
+
                     />
                 </SafeAreaView >
                 {/* 최근 목적지 */}
@@ -171,6 +265,7 @@ export default function RequestLetterPage() {
     );
 }
 
+
 const styles = StyleSheet.create({
     item: {
         borderWidth: 2.5,
@@ -194,6 +289,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
+        zIndex: 1,
     },
     swap: {
         margin: 10,

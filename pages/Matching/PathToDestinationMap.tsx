@@ -4,7 +4,7 @@ import MapView, { Marker, Polyline, Callout } from 'react-native-maps';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import getWalkingRoute from '@/utils/getWalkingRoute';
 import { Colors } from '@/constants/Colors';
-import RouteInfoViewDisabled from '@/components/Map/RouteInfoViewDisabled';
+import RouteInfoViewBlind from '@/components/Map/RouteInfoViewBlind';
 import ResponseConfirmArrivalModal from '@/components/Map/ResponseConfirmArrivalModal';
 
 const routeCircleMarker = require('../../assets/images/routeCircleMarker.png');
@@ -21,25 +21,20 @@ export default function PathToDestinationMap() {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const _origin = route.params.origin;
-    const _destination = route.params.destination;
-    const time = route.params.time;
-    const amount = route.params.amount;
-
-    // origin address, lat, lng
-    // destination address, location {lat, lng}, name
+    const destName = route.params.destName;
+    const requestData = route.params.requestData;
+    // console.log(requestData);
 
     const [origin, setOrigin] = useState(null);
     const [destination, setDestination] = useState(null);
 
     // const [phase, setPhase] = useState(1);
     const [mapRegion, setMapRegion] = useState({
-        latitude: _origin.lat,
-        longitude: _origin.lng,
+        latitude: requestData.srcLocation.srcLat,
+        longitude: requestData.srcLocation.srcLong,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
     });
-    const [distance, setDistance] = useState(0);
     const [routeCoords, setRouteCoords] = useState([]);
     const mapRef = useRef<MapView>(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -53,24 +48,23 @@ export default function PathToDestinationMap() {
 
     useEffect(() => {
         setOrigin({
-            latitude: _origin.lat,
-            longitude: _origin.lng,
+            latitude: requestData.srcLocation.srcLat,
+            longitude: requestData.srcLocation.srcLong,
         }),
         setDestination({
-            latitude: _destination.location.lat,
-            longitude: _destination.location.lng,
+            latitude: requestData.dstLocation.dstLat,
+            longitude: requestData.dstLocation.dstLong,
         });
     }, []);
 
     useEffect(() => {
         const fetchRoute = async () => {
-            if (origin && destination) {
-                const routeData = await getWalkingRoute(origin, destination);
-                if (routeData) {
-                    drawRoute(routeData);
-                    setDistance(routeData[0].properties.totalDistance);
-                    // setTime(routeData[0].properties.totalTime);
-                }
+            // console.log(origin, destination);
+            const routeData = await getWalkingRoute(origin, destination);
+            // console.log('routeData: ', routeData);
+            if (routeData) {
+                drawRoute(routeData);
+                // setTime(routeData[0].properties.totalTime);
             }
         };
         fetchRoute();
@@ -107,13 +101,13 @@ export default function PathToDestinationMap() {
         const timeout = setTimeout(() => {
             setShowConfirmModal(true);
             // setShowConfirmModal(false);
-        }, 5000);
+        }, 2000);
         return () => clearTimeout(timeout);
     }, []);
 
     const handleRequestConfirm = () => {
         setShowConfirmModal(false);
-        navigation.navigate('FinishedMatchingPage', { amount: amount });
+        navigation.navigate('FinishedMatchingPage', { amount: requestData.estSalary });
     };
 
     const handleCancel = () => {
@@ -122,10 +116,11 @@ export default function PathToDestinationMap() {
 
     return (
         <View style={styles.container}>
-            <RouteInfoViewDisabled 
-                origin={_origin} 
-                destination={_destination}
-                time={time}
+            <RouteInfoViewBlind 
+                origin={origin} 
+                destination={destination}
+                destName={destName}
+                time={requestData.estTime}
                 gilbutInfo={gilbutInfo} />
 
             <MapView

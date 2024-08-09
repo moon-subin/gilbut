@@ -35,6 +35,9 @@ export default function HomeScreen() {
 
     const { location } = useContext(UserLocationContext);
 
+    const handlePlaceSelect = (place) => {
+    }
+
     const handleMicButton = () => {
     };
 
@@ -57,7 +60,11 @@ export default function HomeScreen() {
     return (
       <View style={styles.container}>
         <View style={{position:'absolute',zIndex:20,top:70,left:"5%",right:"5%",width:"90%"}}>
-          <PlaceSearchBar placeholder={"장소 검색"} handleMicButton={handleMicButton} />
+          <PlaceSearchBar 
+            placeholder={"장소 검색"} 
+            handleMicButton={handleMicButton}
+            isActive={false}
+            onPlaceSelect={handlePlaceSelect} />
         </View>
         <MapView 
           style={styles.map}

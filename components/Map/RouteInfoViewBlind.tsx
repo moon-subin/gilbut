@@ -13,16 +13,16 @@ import { GOOGLEMAP_KEY } from '@env';
 const refreshBtn = require('../../assets/images/refresh.png');
 const profile = require('../../assets/images/kittyProfile.png');
 
-export default function RouteInfoViewDisabled({ origin, destination, time, gilbutInfo }) {
+export default function RouteInfoViewBlind({ origin, destination, destName, time, gilbutInfo }) {
     const [currentTitle, setCurrentTitle] = useState('');
     const [currentSubtitle, setCurrentSubtitle] = useState('');
 
     const roundedTime = Math.ceil(time/60);
 
     const titles = [
-        `${destination.name}${isLastConstant(destination.name)}\n길 안내를 시작합니다\n${time}분 후 도착 예정 `,
-        `${destination.name}\n도착까지 ${time}분 남았어요 `,
-        `${destination.name}에 도착했어요 `
+        `${destName}${isLastConstant(destName)}\n길 안내를 시작합니다\n${time}분 후 도착 예정 `,
+        `${destName}\n도착까지 ${time}분 남았어요 `,
+        `${destName}에 도착했어요 `
     ];
 
     const subtitles = [
@@ -47,7 +47,7 @@ export default function RouteInfoViewDisabled({ origin, destination, time, gilbu
         const interval = setInterval(() => {
             const distance = haversine(
                 { latitude: origin.latitude, longitude: origin.longitude },
-                { latitude: destination.location.lat, longitude: destination.location.lng }
+                { latitude: destination.latitude, longitude: destination.longitude }
             );
 
             if (distance < 50) { // Change this threshold as needed
@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         padding: 20,
-        marginTop: 20,
     },
     profileInfo: {
         marginLeft: 15,

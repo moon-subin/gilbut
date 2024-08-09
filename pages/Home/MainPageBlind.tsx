@@ -34,6 +34,9 @@ export default function MainPageBlind() {
         }
     }, [location]);
 
+    const handlePlaceSelect = (place) => {
+    }
+
     const handleModalClose = () => {
         setMicModalVisible(false);
     };
@@ -120,7 +123,12 @@ export default function MainPageBlind() {
             </Modal>
             <View style={styles.SearchBarContainer}>
                 <View style={{width:'75%'}}>
-                    <PlaceSearchBar placeholder="장소 검색" handleMicButton={handleMicButton} />
+                    <PlaceSearchBar 
+                        placeholder="장소 검색" 
+                        handleMicButton={handleMicButton}
+                        isActive={false}
+                        onPlaceSelect={handlePlaceSelect}
+                    />
                 </View>
                 <TouchableOpacity style={styles.requestLetter} onPress={goRequestLetter}>
                     <Text style={{ fontSize: 20, fontWeight: '500' }}>의뢰서</Text>

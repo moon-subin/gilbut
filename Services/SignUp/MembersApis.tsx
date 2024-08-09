@@ -1,6 +1,7 @@
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import * as SecureStore from 'expo-secure-store';
+import mime from 'mime';
 
 const API_BASE_URL = 'http://localhost:8081/';
 
@@ -110,4 +111,55 @@ export const refreshAccessToken = async () => {
       console.error('Error refreshing access token:', error);
       throw error;
     }
+};
+
+// [회원가입/도우미] 본인인증-범죄경력회보서, 신분증 인증
+export const uploadHelperVerification = async (memberType, idImgUrl, crimImgUrl) => {
+  try {
+      const formData = new FormData();
+      formData.append('memberType', memberType);
+      formData.append('image', {
+          uri: idImgUrl,
+          type: 'application/png', // 파일 유형에 맞게 수정 필요
+          name: `${memberType}_idCard.png`,
+      });
+      formData.append('file', {
+        uri: crimImgUrl,
+        type: 'application/pdf', // 파일 유형에 맞게 수정 필요
+        name: `${memberType}_crimFile.pdf`,
+      });
+
+      const response = await apiClient.post('/api/helper/signup/verification', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error uploading file:', error);
+      throw error;
+  }
+};
+
+// [회원가입/시각장애인] 본인인증-복지카드 인증
+export const uploadWelfareCard = async (memberType, imgUrl) => {
+  try {
+      const formData = new FormData();
+      formData.append('memberType', memberType);
+      formData.append('file', {
+          uri: imgUrl,
+          type: 'image/png', // 이미지 유형에 맞게 수정 필요
+          name: `${memberType}_welfareCard.png`,
+      });
+
+      const response = await apiClient.post('/api/blind/signup/verification', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+  }
 };

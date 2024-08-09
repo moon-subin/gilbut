@@ -8,7 +8,6 @@ import SignUpCriminalRecChkPage from '@/pages/SignUp/SignUpCriminalRecChkPage';
 import SignUpDocsFinPage from '@/pages/SignUp/SignUpDocsFinPage';
 import SignUpFinPage from '@/pages/SignUp/SignUpFinPage';
 import SignUpSetProfile from '@/pages/SignUp/SignUpSetProfile';
-import SignUpSetProfileBlind from '@/pages/SignUp/SignUpSetProfileBlind';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,7 +25,6 @@ export default function SignUp() {
             <Stack.Screen name="SignUpDocsFinPage" component={SignUpDocsFinPage} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpFinPage" component={SignUpFinPage} options={{ headerShown: false }} />
             <Stack.Screen name="SignUpSetProfile" component={SignUpSetProfile} options={{ headerShown: false }} />
-            <Stack.Screen name="SignUpSetProfileBlind" component={SignUpSetProfileBlind} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
 }

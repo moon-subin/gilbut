@@ -13,14 +13,13 @@ export default function WaitingMatchingPage() {
 
     const [isMatchingSuccess, setIsMatchingSuccess] = useState(false);
 
-    const origin = route.params.origin;
-    const destination = route.params.destination;
-    const time = route.params.time;
-    const amount = route.params.amount;
-    // console.log(origin);
-    // console.log(destName);
-    // console.log(time);
-    // console.log(amount);
+    const originName = route.params.originName;
+    const destName = route.params.destName;
+
+    // console.log(originName, destName);
+
+    const requestData = route.params.requestData;
+
 
     const handlePrevPage = () => {
         navigation.navigate('RequestLetterPage');
@@ -42,10 +41,8 @@ export default function WaitingMatchingPage() {
     useEffect(() => {
         if (isMatchingSuccess) {
             navigation.navigate('MatchingSuccessPage', { 
-                origin: origin,
-                destination: destination,
-                time: time,
-                amount: amount,
+                requestData: requestData,
+                destName: destName,
             });
         }
     }, [isMatchingSuccess]);
@@ -61,10 +58,10 @@ export default function WaitingMatchingPage() {
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Text style={styles.text}><Text style={styles.infoText}>{origin.address}</Text> 에서</Text>
-                <Text style={styles.text}><Text style={styles.infoText}>{destination.name}</Text> 까지</Text>
-                <Text style={styles.text}>총 소요 시간 <Text style={styles.infoText}>{time}분</Text></Text>
-                <Text style={styles.text}>예상 금액 <Text style={styles.infoText}>{amount}원</Text></Text>
+                <Text style={styles.text}><Text style={styles.infoText}>{originName}</Text> 에서</Text>
+                <Text style={styles.text}><Text style={styles.infoText}>{destName}</Text> 까지</Text>
+                <Text style={styles.text}>총 소요 시간 <Text style={styles.infoText}>{requestData.estTime}분</Text></Text>
+                <Text style={styles.text}>예상 금액 <Text style={styles.infoText}>{requestData.estSalary}원</Text></Text>
             </View>
             <View style={styles.content2}>
                 <Image source={matchingFootprint} style={{margin: 20}} />

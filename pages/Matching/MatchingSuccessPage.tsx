@@ -10,10 +10,8 @@ export default function MatchingSuccessPage() {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const origin = route.params.origin;
-    const destination = route.params.destination;
-    const time = route.params.time;
-    const amount = route.params.amount;
+    const destName = route.params.destName;
+    const requestData = route.params.requestData;
 
     const userLevel = 3;
     const currLevelCnt = 6;
@@ -24,10 +22,8 @@ export default function MatchingSuccessPage() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             navigation.navigate('WaitingGilbutPage', { 
-                origin: origin,
-                destination: destination,
-                time: time,
-                amount: amount,
+                requestData: requestData,
+                destName: destName,
             });
         }, 2000);
         return () => clearTimeout(timeout);
